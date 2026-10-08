@@ -1,6 +1,9 @@
 /* ============================================================
    style.css — полный файл
-   Карточки .useful уменьшены на мобиле и малом телефоне.
+   Карточки .useful уменьшены ещё на 20px.
+   Find support уменьшен ещё на 20px.
+   Синяя полоса .top-strip растянута до краёв экрана,
+   включая iPhone safe-area.
    ============================================================ */
 
 * {
@@ -15,14 +18,19 @@ body {
     scroll-behavior: smooth;
 }
 
-/* Первые 180 пикселей — голубые */
+/* Первые 180 пикселей — голубые, во всю ширину экрана */
 .top-strip {
     height: 180px;
+    width: 100%;
     background-color: #87CEEB;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
+    margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+    margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+    padding-left: calc(40px + env(safe-area-inset-left, 0px));
+    padding-right: calc(40px + env(safe-area-inset-right, 0px));
 }
 
 .top-strip img {
@@ -177,9 +185,9 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" */
+/* Блок "Find support" — 662px (было 682) */
 .find-support {
-    width: 682px;
+    width: 662px;
     height: 350px;
     display: flex;
     align-items: stretch;
@@ -437,7 +445,10 @@ body {
    Планшеты (max-width: 1024px)
    ============================================ */
 @media (max-width: 1024px) {
-    .top-strip { padding: 0 30px; }
+    .top-strip {
+        padding-left: calc(30px + env(safe-area-inset-left, 0px));
+        padding-right: calc(30px + env(safe-area-inset-right, 0px));
+    }
     .top-strip img { margin-left: 0; width: 260px; height: auto; }
     .nav { margin-right: 0; gap: 20px; }
     .nav a { font-size: 16px; }
@@ -451,7 +462,7 @@ body {
 
     .find-support {
         width: auto; max-width: 100%; height: auto;
-        margin: 20px 190px 70px 60px;
+        margin: 20px 210px 70px 60px;
     }
     .find-support .text { padding: 30px 30px 30px 40px; }
     .find-support h2 { font-size: 36px; }
@@ -466,11 +477,11 @@ body {
     .useful-card {
         width: auto;
         height: auto;
-        min-height: 430px;
+        min-height: 410px;
     }
     .useful-card .card-image {
-        height: 220px;
-        flex-basis: 220px;
+        height: 200px;
+        flex-basis: 200px;
     }
 
     .footer { padding: 60px 30px 50px 60px; }
@@ -483,6 +494,8 @@ body {
     .top-strip {
         height: auto; min-height: 120px;
         padding: 20px 20px;
+        padding-left: calc(20px + env(safe-area-inset-left, 0px));
+        padding-right: calc(20px + env(safe-area-inset-right, 0px));
         flex-direction: column; gap: 20px;
         align-items: center; justify-content: center;
     }
@@ -533,7 +546,7 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
-    /* Карточки заметно меньше */
+    /* Карточки уменьшены ещё на 20px */
     .useful {
         padding: 44px max(18px, env(safe-area-inset-right)) 50px max(18px, env(safe-area-inset-left));
     }
@@ -548,17 +561,17 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 150px;
-        flex-basis: 150px;
+        height: 130px;
+        flex-basis: 130px;
     }
-    .useful-card .card-body { padding: 16px 18px 18px 18px; }
+    .useful-card .card-body { padding: 14px 16px 16px 16px; }
     .useful-card h3 {
-        font-size: 17px;
-        margin-bottom: 8px;
+        font-size: 16px;
+        margin-bottom: 7px;
         min-height: auto;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 13px; line-height: 1.45; -webkit-line-clamp: 3; }
+    .useful-card p  { font-size: 12.5px; line-height: 1.4; -webkit-line-clamp: 3; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -607,23 +620,23 @@ body {
     .find-support p  { font-size: 15px; }
     .find-support .image { height: 180px; }
 
-    /* Карточки ещё меньше */
+    /* Карточки ещё на 20px меньше */
     .useful {
         padding: 36px max(16px, env(safe-area-inset-right)) 42px max(16px, env(safe-area-inset-left));
     }
     .useful h2 { font-size: 22px; margin-bottom: 20px; }
     .useful-grid { gap: 14px; }
     .useful-card .card-image {
-        height: 130px;
-        flex-basis: 130px;
+        height: 110px;
+        flex-basis: 110px;
     }
-    .useful-card .card-body { padding: 14px 16px 16px 16px; }
+    .useful-card .card-body { padding: 12px 14px 14px 14px; }
     .useful-card h3 {
-        font-size: 15.5px;
-        margin-bottom: 6px;
+        font-size: 14.5px;
+        margin-bottom: 5px;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 12.5px; line-height: 1.4; -webkit-line-clamp: 2; }
+    .useful-card p  { font-size: 11.5px; line-height: 1.35; -webkit-line-clamp: 2; }
 
     .footer { padding: 40px 16px 30px 16px; }
     .footer-col h4 { font-size: 16px; }
