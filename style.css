@@ -1,6 +1,6 @@
 /* ============================================================
    style.css — полный файл
-   Карточки .useful и блок .find-support уменьшены.
+   Карточки .useful уменьшены на мобиле и малом телефоне.
    ============================================================ */
 
 * {
@@ -177,7 +177,7 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" — уменьшен с 722px до 682px */
+/* Блок "Find support" */
 .find-support {
     width: 682px;
     height: 350px;
@@ -245,7 +245,7 @@ body {
     -webkit-text-stroke: 0.3px #f1f1f1;
 }
 
-/* Сетка — колонки 386px (было 406) */
+/* Сетка — колонки 386px */
 .useful-grid {
     display: grid;
     grid-template-columns: repeat(3, 386px);
@@ -253,7 +253,7 @@ body {
     align-items: stretch;
 }
 
-/* Карточка — 386×454 (было 406×474) */
+/* Карточка — 386×454 */
 .useful-card {
     width: 386px;
     height: 454px;
@@ -273,7 +273,7 @@ body {
     border-color: #cfcfcf;
 }
 
-/* Картинка — 236px (было 250) */
+/* Картинка — 236px */
 .useful-card .card-image {
     width: 100%;
     height: 236px;
@@ -290,7 +290,7 @@ body {
     object-position: center;
 }
 
-/* Тело — паддинги 24/26 (было 26/28) */
+/* Тело — паддинги 24/26 */
 .useful-card .card-body {
     flex: 1 1 auto;
     padding: 24px 26px;
@@ -300,7 +300,7 @@ body {
     min-height: 0;
 }
 
-/* Заголовок — 22px (было 24) */
+/* Заголовок — 22px */
 .useful-card h3 {
     font-size: 22px;
     font-weight: 500;
@@ -315,7 +315,7 @@ body {
     min-height: calc(22px * 1.2 * 2);
 }
 
-/* Параграф — 15px (было 16) */
+/* Параграф — 15px */
 .useful-card p {
     font-size: 15px;
     font-weight: 400;
@@ -533,13 +533,14 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
+    /* Карточки заметно меньше */
     .useful {
-        padding: 50px max(20px, env(safe-area-inset-right)) 60px max(20px, env(safe-area-inset-left));
+        padding: 44px max(18px, env(safe-area-inset-right)) 50px max(18px, env(safe-area-inset-left));
     }
-    .useful h2 { font-size: 30px; margin-bottom: 30px; }
+    .useful h2 { font-size: 26px; margin-bottom: 24px; }
     .useful-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 18px;
     }
     .useful-card {
         width: 100%;
@@ -547,16 +548,17 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 180px;
-        flex-basis: 180px;
+        height: 150px;
+        flex-basis: 150px;
     }
-    .useful-card .card-body { padding: 20px 22px 22px 22px; }
+    .useful-card .card-body { padding: 16px 18px 18px 18px; }
     .useful-card h3 {
-        font-size: 19px;
-        margin-bottom: 10px;
+        font-size: 17px;
+        margin-bottom: 8px;
         min-height: auto;
+        -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 14.5px; -webkit-line-clamp: 3; }
+    .useful-card p  { font-size: 13px; line-height: 1.45; -webkit-line-clamp: 3; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -605,17 +607,23 @@ body {
     .find-support p  { font-size: 15px; }
     .find-support .image { height: 180px; }
 
+    /* Карточки ещё меньше */
     .useful {
-        padding: 40px max(20px, env(safe-area-inset-right)) 50px max(20px, env(safe-area-inset-left));
+        padding: 36px max(16px, env(safe-area-inset-right)) 42px max(16px, env(safe-area-inset-left));
     }
-    .useful h2 { font-size: 24px; margin-bottom: 24px; }
+    .useful h2 { font-size: 22px; margin-bottom: 20px; }
+    .useful-grid { gap: 14px; }
     .useful-card .card-image {
-        height: 155px;
-        flex-basis: 155px;
+        height: 130px;
+        flex-basis: 130px;
     }
-    .useful-card .card-body { padding: 18px 18px 20px 18px; }
-    .useful-card h3 { font-size: 17px; }
-    .useful-card p  { font-size: 13.5px; }
+    .useful-card .card-body { padding: 14px 16px 16px 16px; }
+    .useful-card h3 {
+        font-size: 15.5px;
+        margin-bottom: 6px;
+        -webkit-line-clamp: 2;
+    }
+    .useful-card p  { font-size: 12.5px; line-height: 1.4; -webkit-line-clamp: 2; }
 
     .footer { padding: 40px 16px 30px 16px; }
     .footer-col h4 { font-size: 16px; }
