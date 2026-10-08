@@ -1,8 +1,7 @@
 /* ============================================================
    style.css — полный файл
-   Карточки .useful: ширина/высота −10px, вся секция сдвинута
-   влево на 10px через padding-left на ВСЕХ разрешениях,
-   включая мобилу.
+   Карточки .useful: 406×474 (−10px), на мобиле с отступом
+   20px от краёв, поддержка iPhone safe-area.
    ============================================================ */
 
 * {
@@ -231,7 +230,7 @@ body {
     object-fit: cover;
 }
 
-/* Секция "Useful information" — padding-left 280px */
+/* Секция "Useful information" */
 .useful {
     background: #f1f1f1;
     padding: 70px 40px 90px 280px;
@@ -535,8 +534,10 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
-    /* padding-left уменьшен с 20px до 10px — сдвиг влево на 10px */
-    .useful { padding: 50px 20px 60px 10px; }
+    /* Отступ 20px с обеих сторон — карточки не прилипают к стенкам */
+    .useful {
+        padding: 50px max(20px, env(safe-area-inset-right)) 60px max(20px, env(safe-area-inset-left));
+    }
     .useful h2 { font-size: 30px; margin-bottom: 30px; }
     .useful-grid {
         grid-template-columns: 1fr;
@@ -605,8 +606,10 @@ body {
     .find-support p  { font-size: 15px; }
     .find-support .image { height: 180px; }
 
-    /* padding-left уменьшен с 16px до 6px — сдвиг влево на 10px */
-    .useful { padding: 40px 16px 50px 6px; }
+    /* Отступ 20px с обеих сторон + safe-area */
+    .useful {
+        padding: 40px max(20px, env(safe-area-inset-right)) 50px max(20px, env(safe-area-inset-left));
+    }
     .useful h2 { font-size: 24px; margin-bottom: 24px; }
     .useful-card .card-image {
         height: 160px;
@@ -625,7 +628,7 @@ body {
 }
 
 /* ============================================
-   iPhone safe-area
+   iPhone safe-area (для body)
    ============================================ */
 @supports (padding: max(0px)) {
     body {
