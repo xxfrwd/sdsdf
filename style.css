@@ -1,3 +1,7 @@
+/* ============================================================
+   style.css — полный файл
+   ============================================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -240,12 +244,15 @@ body {
     -webkit-text-stroke: 0.3px #f1f1f1;
 }
 
+/* Сетка — фиксированные равные колонки, чтобы карточки были одинаковой ширины */
 .useful-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 416px);
     gap: 40px;
-    flex-wrap: wrap;
+    align-items: stretch;
 }
 
+/* Карточка — flex-колонка с фиксированной высотой, тело растягивается */
 .useful-card {
     width: 416px;
     height: 484px;
@@ -265,10 +272,13 @@ body {
     border-color: #cfcfcf;
 }
 
+/* Картинка — фикс. высота, одинаковая для всех карточек */
 .useful-card .card-image {
     width: 100%;
     height: 260px;
+    flex: 0 0 260px;
     overflow: hidden;
+    background: #f1f1f1;
 }
 
 .useful-card .card-image img {
@@ -276,15 +286,20 @@ body {
     height: 100%;
     display: block;
     object-fit: cover;
+    object-position: center;
 }
 
+/* Тело — растягивается на всю оставшуюся высоту */
 .useful-card .card-body {
-    flex: 1;
+    flex: 1 1 auto;
     padding: 28px 30px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
 }
 
+/* Заголовок — фикс. высота на 2 строки */
 .useful-card h3 {
     font-size: 24px;
     font-weight: 500;
@@ -292,14 +307,26 @@ body {
     margin-bottom: 14px;
     line-height: 1.2;
     letter-spacing: -0.3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(24px * 1.2 * 2);
 }
 
+/* Параграф — обрезка длинного текста */
 .useful-card p {
     font-size: 16px;
     font-weight: 400;
     color: #3a3a3a;
     line-height: 1.5;
     letter-spacing: -0.1px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 /* Футер */
@@ -431,9 +458,18 @@ body {
 
     .useful { padding: 60px 30px 70px 60px; }
     .useful h2 { font-size: 40px; }
+    .useful-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 32px;
+    }
     .useful-card {
-        width: calc((100% - 40px) / 2);
-        height: auto; min-height: 460px;
+        width: auto;
+        height: auto;
+        min-height: 460px;
+    }
+    .useful-card .card-image {
+        height: 240px;
+        flex-basis: 240px;
     }
 
     .footer { padding: 60px 30px 50px 60px; }
@@ -498,12 +534,26 @@ body {
 
     .useful { padding: 50px 20px 60px 20px; }
     .useful h2 { font-size: 30px; margin-bottom: 30px; }
-    .useful-grid { gap: 24px; }
-    .useful-card { width: 100%; height: auto; min-height: auto; }
-    .useful-card .card-image { height: 200px; }
+    .useful-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .useful-card {
+        width: 100%;
+        height: auto;
+        min-height: auto;
+    }
+    .useful-card .card-image {
+        height: 200px;
+        flex-basis: 200px;
+    }
     .useful-card .card-body { padding: 20px 22px 24px 22px; }
-    .useful-card h3 { font-size: 20px; margin-bottom: 10px; }
-    .useful-card p  { font-size: 15px; }
+    .useful-card h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        min-height: auto;
+    }
+    .useful-card p  { font-size: 15px; -webkit-line-clamp: 3; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -553,7 +603,10 @@ body {
 
     .useful { padding: 40px 16px 50px 16px; }
     .useful h2 { font-size: 24px; margin-bottom: 24px; }
-    .useful-card .card-image { height: 170px; }
+    .useful-card .card-image {
+        height: 170px;
+        flex-basis: 170px;
+    }
     .useful-card .card-body { padding: 18px 18px 22px 18px; }
     .useful-card h3 { font-size: 18px; }
     .useful-card p  { font-size: 14px; }
