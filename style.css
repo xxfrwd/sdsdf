@@ -1,5 +1,6 @@
 /* ============================================================
    style.css — полный файл
+   Карточки .useful уменьшены на 10px по ширине и высоте.
    ============================================================ */
 
 * {
@@ -244,18 +245,18 @@ body {
     -webkit-text-stroke: 0.3px #f1f1f1;
 }
 
-/* Сетка — фиксированные равные колонки, чтобы карточки были одинаковой ширины */
+/* Сетка — колонки уменьшены с 416px до 406px */
 .useful-grid {
     display: grid;
-    grid-template-columns: repeat(3, 416px);
+    grid-template-columns: repeat(3, 406px);
     gap: 40px;
     align-items: stretch;
 }
 
-/* Карточка — flex-колонка с фиксированной высотой, тело растягивается */
+/* Карточка — 406×474 вместо 416×484 */
 .useful-card {
-    width: 416px;
-    height: 484px;
+    width: 406px;
+    height: 474px;
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -272,11 +273,11 @@ body {
     border-color: #cfcfcf;
 }
 
-/* Картинка — фикс. высота, одинаковая для всех карточек */
+/* Картинка — 250px вместо 260px */
 .useful-card .card-image {
     width: 100%;
-    height: 260px;
-    flex: 0 0 260px;
+    height: 250px;
+    flex: 0 0 250px;
     overflow: hidden;
     background: #f1f1f1;
 }
@@ -289,10 +290,10 @@ body {
     object-position: center;
 }
 
-/* Тело — растягивается на всю оставшуюся высоту */
+/* Тело — паддинги чуть меньше */
 .useful-card .card-body {
     flex: 1 1 auto;
-    padding: 28px 30px;
+    padding: 26px 28px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -465,11 +466,11 @@ body {
     .useful-card {
         width: auto;
         height: auto;
-        min-height: 460px;
+        min-height: 450px;
     }
     .useful-card .card-image {
-        height: 240px;
-        flex-basis: 240px;
+        height: 230px;
+        flex-basis: 230px;
     }
 
     .footer { padding: 60px 30px 50px 60px; }
@@ -544,10 +545,10 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 200px;
-        flex-basis: 200px;
+        height: 190px;
+        flex-basis: 190px;
     }
-    .useful-card .card-body { padding: 20px 22px 24px 22px; }
+    .useful-card .card-body { padding: 20px 22px 22px 22px; }
     .useful-card h3 {
         font-size: 20px;
         margin-bottom: 10px;
@@ -604,10 +605,10 @@ body {
     .useful { padding: 40px 16px 50px 16px; }
     .useful h2 { font-size: 24px; margin-bottom: 24px; }
     .useful-card .card-image {
-        height: 170px;
-        flex-basis: 170px;
+        height: 160px;
+        flex-basis: 160px;
     }
-    .useful-card .card-body { padding: 18px 18px 22px 18px; }
+    .useful-card .card-body { padding: 18px 18px 20px 18px; }
     .useful-card h3 { font-size: 18px; }
     .useful-card p  { font-size: 14px; }
 
