@@ -1,14 +1,20 @@
 /* ============================================================
-   style.css — полный файл, финальная версия
-   - Карточки .useful на мобиле уменьшены
-   - Форма Sign in на мобиле компактнее
-   - Синяя полоса на всю ширину экрана
+   style.css — финал
+   - Карточки .useful на телефоне ещё меньше
+   - Синяя полоса .top-strip тянется до конца экрана на всех
+     разрешениях, включая iPhone safe-area
+   - Форма Sign in компактная на мобиле
    ============================================================ */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;   /* убирает горизонтальный скролл от отрицательных margin */
 }
 
 body {
@@ -20,7 +26,8 @@ body {
 /* Первые 180 пикселей — голубые, во всю ширину экрана */
 .top-strip {
     height: 180px;
-    width: 100%;
+    width: 100vw;                          /* фиксированно во всю ширину viewport */
+    max-width: 100vw;
     background-color: #87CEEB;
     display: flex;
     align-items: center;
@@ -482,28 +489,38 @@ body {
 
 /* ============================================
    Мобильные (max-width: 768px)
+   Полоса на всю ширину. Форма компактнее.
+   Карточки .useful ещё меньше.
    ============================================ */
 @media (max-width: 768px) {
+    /* Синяя полоса — от края до края экрана */
     .top-strip {
-        height: auto; min-height: 120px;
-        padding: 20px 20px;
+        width: 100vw;
+        max-width: 100vw;
+        height: auto;
+        min-height: 110px;
+        padding: 16px 20px;
         padding-left: calc(20px + env(safe-area-inset-left, 0px));
         padding-right: calc(20px + env(safe-area-inset-right, 0px));
-        flex-direction: column; gap: 20px;
-        align-items: center; justify-content: center;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
     }
-    .top-strip img { width: 220px; height: auto; margin-left: 0; }
+    .top-strip img { width: 200px; height: auto; margin-left: 0; }
     .nav {
-        margin-right: 0; gap: 20px;
+        margin-right: 0; gap: 18px;
         justify-content: center; flex-wrap: wrap;
     }
-    .nav a { font-size: 15px; }
+    .nav a { font-size: 14px; }
 
     .hero-text { padding: 40px 20px 10px 20px; }
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    /* Форма Sign in — компактнее */
+    /* Форма Sign in — компактная */
     .form-section { padding: 8px 20px 40px 20px; }
     .form-section h2 { font-size: 24px; margin-bottom: 16px; }
 
@@ -546,12 +563,12 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
-    /* Карточки Useful — уменьшены в ~1.5 раза */
-    .useful { padding: 40px 20px 50px 20px; }
-    .useful h2 { font-size: 30px; margin-bottom: 24px; }
+    /* Карточки Useful — заметно меньше */
+    .useful { padding: 32px 16px 40px 16px; }
+    .useful h2 { font-size: 26px; margin-bottom: 18px; }
     .useful-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
     }
     .useful-card {
         width: 100%;
@@ -559,17 +576,17 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 140px;
-        flex-basis: 140px;
+        height: 110px;
+        flex-basis: 110px;
     }
-    .useful-card .card-body { padding: 16px 18px 18px 18px; }
+    .useful-card .card-body { padding: 12px 14px 14px 14px; }
     .useful-card h3 {
-        font-size: 18px;
-        margin-bottom: 8px;
+        font-size: 15px;
+        margin-bottom: 5px;
         min-height: auto;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 13px; line-height: 1.4; -webkit-line-clamp: 3; }
+    .useful-card p  { font-size: 11.5px; line-height: 1.35; -webkit-line-clamp: 2; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -586,10 +603,17 @@ body {
    Маленькие телефоны (max-width: 480px)
    ============================================ */
 @media (max-width: 480px) {
-    .top-strip img { width: 180px; }
-    .nav { gap: 16px; }
-    .nav a { font-size: 14px; }
-    .nav .search-icon svg { width: 16px; height: 16px; }
+    .top-strip {
+        min-height: 100px;
+        padding: 14px 16px;
+        padding-left: calc(16px + env(safe-area-inset-left, 0px));
+        padding-right: calc(16px + env(safe-area-inset-right, 0px));
+        gap: 14px;
+    }
+    .top-strip img { width: 170px; }
+    .nav { gap: 14px; }
+    .nav a { font-size: 13px; }
+    .nav .search-icon svg { width: 15px; height: 15px; }
 
     .hero-text { padding: 30px 16px 10px 16px; }
     .hero-text h1 { font-size: 26px; }
@@ -632,20 +656,20 @@ body {
     .find-support .image { height: 180px; }
 
     /* Карточки ещё меньше */
-    .useful { padding: 32px 16px 40px 16px; }
-    .useful h2 { font-size: 24px; margin-bottom: 20px; }
-    .useful-grid { gap: 12px; }
+    .useful { padding: 26px 14px 32px 14px; }
+    .useful h2 { font-size: 22px; margin-bottom: 14px; }
+    .useful-grid { gap: 10px; }
     .useful-card .card-image {
-        height: 120px;
-        flex-basis: 120px;
+        height: 90px;
+        flex-basis: 90px;
     }
-    .useful-card .card-body { padding: 14px 14px 16px 14px; }
+    .useful-card .card-body { padding: 10px 12px 12px 12px; }
     .useful-card h3 {
-        font-size: 16px;
-        margin-bottom: 6px;
+        font-size: 13.5px;
+        margin-bottom: 4px;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 12px; line-height: 1.35; -webkit-line-clamp: 2; }
+    .useful-card p  { font-size: 10.5px; line-height: 1.3; -webkit-line-clamp: 2; }
 
     .footer { padding: 40px 16px 30px 16px; }
     .footer-col h4 { font-size: 16px; }
@@ -671,8 +695,10 @@ body {
 /* Ландшафт на телефоне */
 @media (max-height: 500px) and (orientation: landscape) {
     .top-strip {
-        min-height: 80px; padding: 10px 20px;
-        flex-direction: row; gap: 20px;
+        min-height: 80px;
+        padding: 10px 20px;
+        flex-direction: row;
+        gap: 20px;
     }
     .top-strip img { width: 160px; }
     .hero-text { padding: 20px 20px 10px 20px; }
