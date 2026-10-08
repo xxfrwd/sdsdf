@@ -1,6 +1,6 @@
 /* ============================================================
    style.css — полный файл
-   Форма Sign in и блок Find support укорочены справа ещё на 20px.
+   Форма Sign in и блок Find support укорочены справа ещё на 40px.
    ============================================================ */
 
 * {
@@ -115,12 +115,12 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* Форма — max-width уменьшен с 620px до 600px */
+/* Форма — max-width уменьшен с 600px до 560px */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px 20px;
-    max-width: 600px;
+    max-width: 560px;
 }
 
 .form-field {
@@ -178,9 +178,9 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" — ширина уменьшена с 782px до 762px */
+/* Блок "Find support" — ширина уменьшена с 762px до 722px */
 .find-support {
-    width: 762px;
+    width: 722px;
     height: 350px;
     display: flex;
     align-items: stretch;
@@ -448,11 +448,11 @@ body {
     .hero-text p  { font-size: 22px; }
 
     .form-section { padding: 10px 30px 60px 60px; }
-    .form-grid { max-width: 600px; }
+    .form-grid { max-width: 560px; }
 
     .find-support {
         width: auto; max-width: 100%; height: auto;
-        margin: 20px 150px 70px 60px;   /* правый отступ +20px */
+        margin: 20px 190px 70px 60px;   /* правый отступ +40px */
     }
     .find-support .text { padding: 30px 30px 30px 40px; }
     .find-support h2 { font-size: 36px; }
