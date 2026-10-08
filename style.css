@@ -1,10 +1,10 @@
 /* ============================================================
    style.css — полный файл
-   Форма Sign in и блок Find support укорочены справа:
-   - десктоп: -40px
-   - планшет: -40px
-   - мобила: правый отступ +40px
-   - малый телефон: правый отступ +40px
+   Форма и Find support укорочены справа:
+   - десктоп: max-width 560px / width 722px
+   - планшет: max-width 560px / margin-right 190px
+   - мобила: правый отступ 40px (−20px от контента)
+   - малый телефон: правый отступ 36px (−20px)
    ============================================================ */
 
 * {
@@ -498,12 +498,12 @@ body {
     }
     .nav a { font-size: 15px; }
 
-    .hero-text { padding: 40px 60px 10px 20px; }
+    .hero-text { padding: 40px 40px 10px 20px; }
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    /* Правый отступ +40px */
-    .form-section { padding: 10px 60px 50px 20px; }
+    /* Правый отступ 40px — контент укорочен на 20px */
+    .form-section { padding: 10px 40px 50px 20px; }
     .form-section h2 { font-size: 26px; margin-bottom: 20px; }
 
     .form-grid {
@@ -526,11 +526,11 @@ body {
         font-size: 16px;
     }
 
-    /* Правый отступ +40px */
+    /* Правый margin 40px — блок укорочен на 20px */
     .find-support {
         width: auto; max-width: 100%; height: auto;
         flex-direction: column;
-        margin: 20px 60px 50px 20px;
+        margin: 20px 40px 50px 20px;
     }
     .find-support .text { padding: 30px 24px 24px 24px; }
     .find-support h2 { font-size: 30px; margin-bottom: 16px; }
@@ -585,12 +585,12 @@ body {
     .nav a { font-size: 14px; }
     .nav .search-icon svg { width: 16px; height: 16px; }
 
-    .hero-text { padding: 30px 56px 10px 16px; }
+    .hero-text { padding: 30px 36px 10px 16px; }
     .hero-text h1 { font-size: 26px; }
     .hero-text p  { font-size: 16px; }
 
-    /* Правый отступ +40px */
-    .form-section { padding: 10px 56px 40px 16px; }
+    /* Правый отступ 36px — контент укорочен на 20px */
+    .form-section { padding: 10px 36px 40px 16px; }
     .form-section h2 { font-size: 22px; }
 
     .form-grid {
@@ -607,8 +607,8 @@ body {
     }
     .form-field label { font-size: 11px; }
 
-    /* Правый отступ +40px */
-    .find-support { margin: 16px 60px 40px 20px; }
+    /* Правый margin 40px — блок укорочен на 20px */
+    .find-support { margin: 16px 40px 40px 20px; }
     .find-support .text { padding: 24px 20px 20px 20px; }
     .find-support h2 { font-size: 24px; }
     .find-support p  { font-size: 15px; }
