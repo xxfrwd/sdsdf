@@ -1,7 +1,6 @@
 /* ============================================================
    style.css — полный файл
-   Форма Sign in и блок Find support укорочены справа на 100px.
-   Карточки .useful: 406×474, с отступами от краёв на мобиле.
+   Форма Sign in и блок Find support укорочены справа ещё на 20px.
    ============================================================ */
 
 * {
@@ -116,12 +115,12 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* Форма — max-width уменьшен с 720px до 620px */
+/* Форма — max-width уменьшен с 620px до 600px */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px 20px;
-    max-width: 620px;
+    max-width: 600px;
 }
 
 .form-field {
@@ -179,9 +178,9 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" — ширина уменьшена с 882px до 782px */
+/* Блок "Find support" — ширина уменьшена с 782px до 762px */
 .find-support {
-    width: 782px;
+    width: 762px;
     height: 350px;
     display: flex;
     align-items: stretch;
@@ -449,11 +448,11 @@ body {
     .hero-text p  { font-size: 22px; }
 
     .form-section { padding: 10px 30px 60px 60px; }
-    .form-grid { max-width: 620px; }
+    .form-grid { max-width: 600px; }
 
     .find-support {
         width: auto; max-width: 100%; height: auto;
-        margin: 20px 130px 70px 60px;      /* правый отступ увеличен на 100px */
+        margin: 20px 150px 70px 60px;   /* правый отступ +20px */
     }
     .find-support .text { padding: 30px 30px 30px 40px; }
     .find-support h2 { font-size: 36px; }
@@ -505,7 +504,7 @@ body {
     .form-grid {
         grid-template-columns: 1fr 1fr;
         gap: 14px;
-        max-width: 100%;       /* на мобиле форма растянута на всю ширину секции */
+        max-width: 100%;
     }
     .form-field.full { grid-column: 1 / -1; }
 
@@ -525,7 +524,7 @@ body {
     .find-support {
         width: auto; max-width: 100%; height: auto;
         flex-direction: column;
-        margin: 20px 20px 50px 20px;   /* на мобиле симметрично 20/20 */
+        margin: 20px 20px 50px 20px;
     }
     .find-support .text { padding: 30px 24px 24px 24px; }
     .find-support h2 { font-size: 30px; margin-bottom: 16px; }
