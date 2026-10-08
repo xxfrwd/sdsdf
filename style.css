@@ -1,10 +1,6 @@
 /* ============================================================
    style.css — полный файл
-   Форма и Find support укорочены справа:
-   - десктоп: max-width 560px / width 722px
-   - планшет: max-width 560px / margin-right 190px
-   - мобила: правый отступ 40px (−20px от контента)
-   - малый телефон: правый отступ 36px (−20px)
+   Карточки .useful и блок .find-support уменьшены.
    ============================================================ */
 
 * {
@@ -119,7 +115,6 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* Форма — max-width 560px */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -182,9 +177,9 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" — ширина 722px */
+/* Блок "Find support" — уменьшен с 722px до 682px */
 .find-support {
-    width: 722px;
+    width: 682px;
     height: 350px;
     display: flex;
     align-items: stretch;
@@ -250,18 +245,18 @@ body {
     -webkit-text-stroke: 0.3px #f1f1f1;
 }
 
-/* Сетка — колонки 406px */
+/* Сетка — колонки 386px (было 406) */
 .useful-grid {
     display: grid;
-    grid-template-columns: repeat(3, 406px);
-    gap: 40px;
+    grid-template-columns: repeat(3, 386px);
+    gap: 36px;
     align-items: stretch;
 }
 
-/* Карточка — 406×474 */
+/* Карточка — 386×454 (было 406×474) */
 .useful-card {
-    width: 406px;
-    height: 474px;
+    width: 386px;
+    height: 454px;
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -278,11 +273,11 @@ body {
     border-color: #cfcfcf;
 }
 
-/* Картинка — 250px */
+/* Картинка — 236px (было 250) */
 .useful-card .card-image {
     width: 100%;
-    height: 250px;
-    flex: 0 0 250px;
+    height: 236px;
+    flex: 0 0 236px;
     overflow: hidden;
     background: #f1f1f1;
 }
@@ -295,34 +290,34 @@ body {
     object-position: center;
 }
 
-/* Тело — паддинги 26/28 */
+/* Тело — паддинги 24/26 (было 26/28) */
 .useful-card .card-body {
     flex: 1 1 auto;
-    padding: 26px 28px;
+    padding: 24px 26px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     min-height: 0;
 }
 
-/* Заголовок — фикс. высота на 2 строки */
+/* Заголовок — 22px (было 24) */
 .useful-card h3 {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 500;
     color: #1a1a1a;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     line-height: 1.2;
     letter-spacing: -0.3px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: calc(24px * 1.2 * 2);
+    min-height: calc(22px * 1.2 * 2);
 }
 
-/* Параграф — обрезка до 4 строк */
+/* Параграф — 15px (было 16) */
 .useful-card p {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     color: #3a3a3a;
     line-height: 1.5;
@@ -471,11 +466,11 @@ body {
     .useful-card {
         width: auto;
         height: auto;
-        min-height: 450px;
+        min-height: 430px;
     }
     .useful-card .card-image {
-        height: 230px;
-        flex-basis: 230px;
+        height: 220px;
+        flex-basis: 220px;
     }
 
     .footer { padding: 60px 30px 50px 60px; }
@@ -498,12 +493,11 @@ body {
     }
     .nav a { font-size: 15px; }
 
-    .hero-text { padding: 40px 40px 10px 20px; }
+    .hero-text { padding: 40px 20px 10px 20px; }
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    /* Правый отступ 40px — контент укорочен на 20px */
-    .form-section { padding: 10px 40px 50px 20px; }
+    .form-section { padding: 10px 20px 50px 20px; }
     .form-section h2 { font-size: 26px; margin-bottom: 20px; }
 
     .form-grid {
@@ -526,11 +520,10 @@ body {
         font-size: 16px;
     }
 
-    /* Правый margin 40px — блок укорочен на 20px */
     .find-support {
         width: auto; max-width: 100%; height: auto;
         flex-direction: column;
-        margin: 20px 40px 50px 20px;
+        margin: 20px 20px 50px 20px;
     }
     .find-support .text { padding: 30px 24px 24px 24px; }
     .find-support h2 { font-size: 30px; margin-bottom: 16px; }
@@ -554,16 +547,16 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 190px;
-        flex-basis: 190px;
+        height: 180px;
+        flex-basis: 180px;
     }
     .useful-card .card-body { padding: 20px 22px 22px 22px; }
     .useful-card h3 {
-        font-size: 20px;
+        font-size: 19px;
         margin-bottom: 10px;
         min-height: auto;
     }
-    .useful-card p  { font-size: 15px; -webkit-line-clamp: 3; }
+    .useful-card p  { font-size: 14.5px; -webkit-line-clamp: 3; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -585,12 +578,11 @@ body {
     .nav a { font-size: 14px; }
     .nav .search-icon svg { width: 16px; height: 16px; }
 
-    .hero-text { padding: 30px 36px 10px 16px; }
+    .hero-text { padding: 30px 16px 10px 16px; }
     .hero-text h1 { font-size: 26px; }
     .hero-text p  { font-size: 16px; }
 
-    /* Правый отступ 36px — контент укорочен на 20px */
-    .form-section { padding: 10px 36px 40px 16px; }
+    .form-section { padding: 10px 16px 40px 16px; }
     .form-section h2 { font-size: 22px; }
 
     .form-grid {
@@ -607,8 +599,7 @@ body {
     }
     .form-field label { font-size: 11px; }
 
-    /* Правый margin 40px — блок укорочен на 20px */
-    .find-support { margin: 16px 40px 40px 20px; }
+    .find-support { margin: 16px 20px 40px 20px; }
     .find-support .text { padding: 24px 20px 20px 20px; }
     .find-support h2 { font-size: 24px; }
     .find-support p  { font-size: 15px; }
@@ -619,12 +610,12 @@ body {
     }
     .useful h2 { font-size: 24px; margin-bottom: 24px; }
     .useful-card .card-image {
-        height: 160px;
-        flex-basis: 160px;
+        height: 155px;
+        flex-basis: 155px;
     }
     .useful-card .card-body { padding: 18px 18px 20px 18px; }
-    .useful-card h3 { font-size: 18px; }
-    .useful-card p  { font-size: 14px; }
+    .useful-card h3 { font-size: 17px; }
+    .useful-card p  { font-size: 13.5px; }
 
     .footer { padding: 40px 16px 30px 16px; }
     .footer-col h4 { font-size: 16px; }
