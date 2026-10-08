@@ -1,6 +1,10 @@
 /* ============================================================
    style.css — полный файл
-   Форма Sign in и блок Find support укорочены справа ещё на 40px.
+   Форма Sign in и блок Find support укорочены справа:
+   - десктоп: -40px
+   - планшет: -40px
+   - мобила: правый отступ +40px
+   - малый телефон: правый отступ +40px
    ============================================================ */
 
 * {
@@ -115,7 +119,7 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* Форма — max-width уменьшен с 600px до 560px */
+/* Форма — max-width 560px */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -178,7 +182,7 @@ body {
     background: #2a2a2a;
 }
 
-/* Блок "Find support" — ширина уменьшена с 762px до 722px */
+/* Блок "Find support" — ширина 722px */
 .find-support {
     width: 722px;
     height: 350px;
@@ -452,7 +456,7 @@ body {
 
     .find-support {
         width: auto; max-width: 100%; height: auto;
-        margin: 20px 190px 70px 60px;   /* правый отступ +40px */
+        margin: 20px 190px 70px 60px;
     }
     .find-support .text { padding: 30px 30px 30px 40px; }
     .find-support h2 { font-size: 36px; }
@@ -494,11 +498,12 @@ body {
     }
     .nav a { font-size: 15px; }
 
-    .hero-text { padding: 40px 20px 10px 20px; }
+    .hero-text { padding: 40px 60px 10px 20px; }
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    .form-section { padding: 10px 20px 50px 20px; }
+    /* Правый отступ +40px */
+    .form-section { padding: 10px 60px 50px 20px; }
     .form-section h2 { font-size: 26px; margin-bottom: 20px; }
 
     .form-grid {
@@ -521,10 +526,11 @@ body {
         font-size: 16px;
     }
 
+    /* Правый отступ +40px */
     .find-support {
         width: auto; max-width: 100%; height: auto;
         flex-direction: column;
-        margin: 20px 20px 50px 20px;
+        margin: 20px 60px 50px 20px;
     }
     .find-support .text { padding: 30px 24px 24px 24px; }
     .find-support h2 { font-size: 30px; margin-bottom: 16px; }
@@ -579,11 +585,12 @@ body {
     .nav a { font-size: 14px; }
     .nav .search-icon svg { width: 16px; height: 16px; }
 
-    .hero-text { padding: 30px 16px 10px 16px; }
+    .hero-text { padding: 30px 56px 10px 16px; }
     .hero-text h1 { font-size: 26px; }
     .hero-text p  { font-size: 16px; }
 
-    .form-section { padding: 10px 16px 40px 16px; }
+    /* Правый отступ +40px */
+    .form-section { padding: 10px 56px 40px 16px; }
     .form-section h2 { font-size: 22px; }
 
     .form-grid {
@@ -600,7 +607,8 @@ body {
     }
     .form-field label { font-size: 11px; }
 
-    .find-support { margin: 16px 20px 40px 20px; }
+    /* Правый отступ +40px */
+    .find-support { margin: 16px 60px 40px 20px; }
     .find-support .text { padding: 24px 20px 20px 20px; }
     .find-support h2 { font-size: 24px; }
     .find-support p  { font-size: 15px; }
