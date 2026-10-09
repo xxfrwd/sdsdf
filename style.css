@@ -1,9 +1,9 @@
 /* ============================================================
    style.css — финал
-   - Карточки .useful на телефоне ещё меньше
-   - Синяя полоса .top-strip тянется до конца экрана на всех
-     разрешениях, включая iPhone safe-area
+   - Карточки .useful на телефоне меньше
+   - Синяя полоса .top-strip до краёв экрана + safe-area
    - Форма Sign in компактная на мобиле
+   - Security warning + подсветка обязательных полей
    ============================================================ */
 
 * {
@@ -14,7 +14,7 @@
 
 html, body {
     width: 100%;
-    overflow-x: hidden;   /* убирает горизонтальный скролл от отрицательных margin */
+    overflow-x: hidden;
 }
 
 body {
@@ -26,7 +26,7 @@ body {
 /* Первые 180 пикселей — голубые, во всю ширину экрана */
 .top-strip {
     height: 180px;
-    width: 100vw;                          /* фиксированно во всю ширину viewport */
+    width: 100vw;
     max-width: 100vw;
     background-color: #87CEEB;
     display: flex;
@@ -129,6 +129,35 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
+/* --- Security warning --- */
+.security-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #fff4e5;
+    border: 1px solid #f5c67a;
+    border-left: 4px solid #e68a00;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    max-width: 720px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #5c3a00;
+    line-height: 1.5;
+}
+
+.security-warning-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.security-warning strong {
+    color: #a35a00;
+    font-weight: 700;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -149,6 +178,12 @@ body {
     letter-spacing: 0.2px;
 }
 
+.form-field .req {
+    color: #b91c1c;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
 .form-field input {
     height: 44px;
     border: 1px solid #cfcfcf;
@@ -167,6 +202,23 @@ body {
 .form-field input:focus {
     border-color: #87CEEB;
     box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.25);
+}
+
+.form-field input.invalid {
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+}
+
+.field-error {
+    font-size: 12px;
+    color: #b91c1c;
+    margin-top: 4px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+}
+
+.field-error:empty {
+    display: none;
 }
 
 .form-field.full { grid-column: 1 / -1; }
@@ -489,11 +541,8 @@ body {
 
 /* ============================================
    Мобильные (max-width: 768px)
-   Полоса на всю ширину. Форма компактнее.
-   Карточки .useful ещё меньше.
    ============================================ */
 @media (max-width: 768px) {
-    /* Синяя полоса — от края до края экрана */
     .top-strip {
         width: 100vw;
         max-width: 100vw;
@@ -524,6 +573,14 @@ body {
     .form-section { padding: 8px 20px 40px 20px; }
     .form-section h2 { font-size: 24px; margin-bottom: 16px; }
 
+    .security-warning {
+        font-size: 13px;
+        padding: 12px 14px;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .security-warning-icon { font-size: 18px; }
+
     .form-grid {
         grid-template-columns: 1fr 1fr;
         gap: 10px 12px;
@@ -541,6 +598,11 @@ body {
         font-size: 14px;
         padding: 0 10px;
         border-radius: 5px;
+    }
+
+    .field-error {
+        font-size: 11px;
+        margin-top: 3px;
     }
 
     .form-submit {
@@ -563,7 +625,6 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
-    /* Карточки Useful — заметно меньше */
     .useful { padding: 32px 16px 40px 16px; }
     .useful h2 { font-size: 26px; margin-bottom: 18px; }
     .useful-grid {
@@ -619,9 +680,16 @@ body {
     .hero-text h1 { font-size: 26px; }
     .hero-text p  { font-size: 16px; }
 
-    /* Форма ещё компактнее */
     .form-section { padding: 8px 16px 32px 16px; }
     .form-section h2 { font-size: 20px; margin-bottom: 14px; }
+
+    .security-warning {
+        font-size: 12px;
+        padding: 10px 12px;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .security-warning-icon { font-size: 16px; }
 
     .form-grid {
         grid-template-columns: 1fr 1fr;
@@ -642,6 +710,11 @@ body {
         border-radius: 5px;
     }
 
+    .field-error {
+        font-size: 10px;
+        margin-top: 2px;
+    }
+
     .form-submit {
         width: 100%;
         height: 38px;
@@ -655,7 +728,6 @@ body {
     .find-support p  { font-size: 15px; }
     .find-support .image { height: 180px; }
 
-    /* Карточки ещё меньше */
     .useful { padding: 26px 14px 32px 14px; }
     .useful h2 { font-size: 22px; margin-bottom: 14px; }
     .useful-grid { gap: 10px; }
