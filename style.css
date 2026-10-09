@@ -1,856 +1,195 @@
-/* ============================================================
-   style.css — финал
-   - Карточки .useful на телефоне меньше
-   - Синяя полоса .top-strip до краёв экрана + safe-area
-   - Форма Sign in компактная на мобиле
-   - Security warning с красивой упаковкой (SVG иконка фикс.)
-   - Подсветка обязательных полей
-   ============================================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    width: 100%;
-    overflow-x: hidden;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #fff;
-    scroll-behavior: smooth;
-}
-
-/* Первые 180 пикселей — голубые, во всю ширину экрана */
-.top-strip {
-    height: 180px;
-    width: 100vw;
-    max-width: 100vw;
-    background-color: #87CEEB;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    margin-left: calc(-1 * env(safe-area-inset-left, 0px));
-    margin-right: calc(-1 * env(safe-area-inset-right, 0px));
-    padding-left: calc(40px + env(safe-area-inset-left, 0px));
-    padding-right: calc(40px + env(safe-area-inset-right, 0px));
-}
-
-.top-strip img {
-    width: 313px;
-    height: 68px;
-    display: block;
-    margin-left: 250px;
-}
-
-.nav {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    margin-right: 250px;
-}
-
-.nav a {
-    color: #000;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 17px;
-    font-family: Arial, Helvetica, sans-serif;
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
-    transition: border-color 0.15s ease;
-    cursor: pointer;
-}
-
-.nav a:hover {
-    border-bottom-color: #000;
-}
-
-.nav .search-icon {
-    display: inline-flex;
-    align-items: center;
-    color: #000;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
-    transition: border-color 0.15s ease;
-}
-
-.nav .search-icon:hover {
-    border-bottom-color: #000;
-}
-
-.nav .search-icon svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-}
-
-/* Hero */
-.hero-text {
-    padding: 70px 40px 20px 290px;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-.hero-text h1 {
-    font-size: 46px;
-    font-weight: 400;
-    color: #1a1a1a;
-    line-height: 1.1;
-    margin-bottom: 22px;
-    letter-spacing: -0.5px;
-    -webkit-text-stroke: 0.4px #fff;
-}
-
-.hero-text p {
-    font-size: 26px;
-    font-weight: 400;
-    color: #1a1a1a;
-    line-height: 1.3;
-    letter-spacing: -0.2px;
-    -webkit-text-stroke: 0.3px #fff;
-}
-
-/* Sign in */
-.form-section {
-    padding: 10px 40px 60px 290px;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-.form-section h2 {
-    font-size: 32px;
-    font-weight: 400;
-    color: #1a1a1a;
-    margin-bottom: 24px;
-    letter-spacing: -0.3px;
-    -webkit-text-stroke: 0.3px #fff;
-}
-
-/* ============================================
-   Security warning — красивая упаковка
-   ============================================ */
-
-.security-warning {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    background: linear-gradient(135deg, #fff8ec 0%, #fff3dd 100%);
-    border: 1px solid #f0c983;
-    border-left: 4px solid #e68a00;
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 28px;
-    max-width: 720px;
-    font-family: Helvetica, Arial, sans-serif;
-    color: #5c3a00;
-    line-height: 1.5;
-    box-shadow: 0 2px 10px rgba(230, 138, 0, 0.08);
-}
-
-.security-warning-icon {
-    flex: 0 0 32px;
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    max-width: 32px;
-    border-radius: 50%;
-    background: #e68a00;
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(230, 138, 0, 0.35);
-    overflow: hidden;
-}
-
-.security-warning-icon svg {
-    width: 18px !important;
-    height: 18px !important;
-    max-width: 18px !important;
-    max-height: 18px !important;
-    display: block;
-    flex: 0 0 auto;
-}
-
-.security-warning-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.security-warning-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #a35a00;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.security-warning-text {
-    font-size: 14px;
-    color: #5c3a00;
-    line-height: 1.5;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px 20px;
-    max-width: 720px;
-}
-
-.form-field {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-field label {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 6px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
-}
-
-.form-field .req {
-    color: #b91c1c;
-    font-weight: 700;
-    margin-left: 2px;
-}
-
-.form-field input {
-    height: 44px;
-    border: 1px solid #cfcfcf;
-    border-radius: 6px;
-    padding: 0 14px;
-    font-size: 16px;
-    color: #1a1a1a;
-    font-family: inherit;
-    background: #fff;
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.form-field input::placeholder { color: #aaa; }
-
-.form-field input:focus {
-    border-color: #87CEEB;
-    box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.25);
-}
-
-.form-field input.invalid {
-    border-color: #b91c1c;
-    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
-}
-
-.field-error {
-    font-size: 12px;
-    color: #b91c1c;
-    margin-top: 4px;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-}
-
-.field-error:empty {
-    display: none;
-}
-
-.form-field.full { grid-column: 1 / -1; }
-
-.form-submit {
-    grid-column: 1 / -1;
-    margin-top: 8px;
-    height: 48px;
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s ease;
-}
-
-.form-submit:hover {
-    background: #2a2a2a;
-}
-
-/* Find support */
-.find-support {
-    width: 882px;
-    height: 350px;
-    display: flex;
-    align-items: stretch;
-    margin: 20px 40px 80px 290px;
-    border: 1px solid #d8d8d8;
-    font-family: Helvetica, Arial, sans-serif;
-    overflow: hidden;
-}
-
-.find-support .text {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 40px 40px 40px 60px;
-}
-
-.find-support h2 {
-    font-size: 44px;
-    font-weight: 400;
-    color: #1a1a1a;
-    line-height: 1.1;
-    margin-bottom: 24px;
-    letter-spacing: -0.6px;
-    -webkit-text-stroke: 0.4px #fff;
-}
-
-.find-support p {
-    font-size: 20px;
-    font-weight: 400;
-    color: #2a2a2a;
-    line-height: 1.4;
-    letter-spacing: -0.2px;
-    max-width: 400px;
-    -webkit-text-stroke: 0.2px #fff;
-}
-
-.find-support .image {
-    flex: 0 0 50%;
-    height: 100%;
-}
-
-.find-support .image img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-/* Useful */
-.useful {
-    background: #f1f1f1;
-    padding: 70px 40px 90px 290px;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-.useful h2 {
-    font-size: 48px;
-    font-weight: 400;
-    color: #1a1a1a;
-    letter-spacing: -0.6px;
-    margin-bottom: 50px;
-    -webkit-text-stroke: 0.3px #f1f1f1;
-}
-
-.useful-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 416px);
-    gap: 40px;
-    align-items: stretch;
-}
-
-.useful-card {
-    width: 416px;
-    height: 484px;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    transition: border-color 0.15s ease;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-}
-
-.useful-card:hover {
-    border-color: #cfcfcf;
-}
-
-.useful-card .card-image {
-    width: 100%;
-    height: 260px;
-    flex: 0 0 260px;
-    overflow: hidden;
-    background: #f1f1f1;
-}
-
-.useful-card .card-image img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    object-position: center;
-}
-
-.useful-card .card-body {
-    flex: 1 1 auto;
-    padding: 28px 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 0;
-}
-
-.useful-card h3 {
-    font-size: 24px;
-    font-weight: 500;
-    color: #1a1a1a;
-    margin-bottom: 14px;
-    line-height: 1.2;
-    letter-spacing: -0.3px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: calc(24px * 1.2 * 2);
-}
-
-.useful-card p {
-    font-size: 16px;
-    font-weight: 400;
-    color: #3a3a3a;
-    line-height: 1.5;
-    letter-spacing: -0.1px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: 1 1 auto;
-    min-height: 0;
-}
-
-/* Footer */
-.footer {
-    background: #000;
-    color: #fff;
-    padding: 70px 40px 60px 290px;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-.footer-top {
-    display: flex;
-    gap: 80px;
-    margin-bottom: 50px;
-}
-
-.footer-col {
-    display: flex;
-    flex-direction: column;
-}
-
-.footer-col h4 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 26px;
-    letter-spacing: 0.2px;
-}
-
-.footer-col a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 400;
-    margin-bottom: 18px;
-    border-bottom: 1px solid transparent;
-    align-self: flex-start;
-    padding-bottom: 1px;
-    transition: border-color 0.15s ease;
-    cursor: pointer;
-}
-
-.footer-col a:hover {
-    border-bottom-color: #fff;
-}
-
-.footer hr {
-    border: 0;
-    border-top: 1px solid #3a3a3a;
-    margin: 0 0 30px 0;
-}
-
-.footer-legal {
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-    margin-bottom: 50px;
-}
-
-.footer-legal a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 15px;
-    border-bottom: 1px solid transparent;
-    padding-bottom: 1px;
-    transition: border-color 0.15s ease;
-    cursor: pointer;
-}
-
-.footer-legal a:hover {
-    border-bottom-color: #fff;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 60px;
-    flex-wrap: wrap;
-}
-
-.footer-logos {
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-.footer-logos img {
-    width: 313px;
-    height: 68px;
-    display: block;
-    filter: brightness(0) invert(1);
-}
-
-.footer-ack {
-    flex: 1;
-    max-width: 620px;
-    font-size: 15px;
-    line-height: 1.5;
-    color: #fff;
-}
-
-#signin {
-    scroll-margin-top: 20px;
-}
-
-/* ============================================
-   Планшеты (max-width: 1024px)
-   ============================================ */
-@media (max-width: 1024px) {
-    .top-strip {
-        padding-left: calc(30px + env(safe-area-inset-left, 0px));
-        padding-right: calc(30px + env(safe-area-inset-right, 0px));
-    }
-    .top-strip img { margin-left: 0; width: 260px; height: auto; }
-    .nav { margin-right: 0; gap: 20px; }
-    .nav a { font-size: 16px; }
-
-    .hero-text { padding: 60px 30px 20px 60px; }
-    .hero-text h1 { font-size: 40px; }
-    .hero-text p  { font-size: 22px; }
-
-    .form-section { padding: 10px 30px 60px 60px; }
-    .form-grid { max-width: 100%; }
-    .security-warning { max-width: 100%; }
-
-    .find-support {
-        width: auto; max-width: 100%; height: auto;
-        margin: 20px 30px 70px 60px;
-    }
-    .find-support .text { padding: 30px 30px 30px 40px; }
-    .find-support h2 { font-size: 36px; }
-    .find-support p  { font-size: 18px; }
-
-    .useful { padding: 60px 30px 70px 60px; }
-    .useful h2 { font-size: 40px; }
-    .useful-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 32px;
-    }
-    .useful-card {
-        width: auto;
-        height: auto;
-        min-height: 460px;
-    }
-    .useful-card .card-image {
-        height: 240px;
-        flex-basis: 240px;
-    }
-
-    .footer { padding: 60px 30px 50px 60px; }
-}
-
-/* ============================================
-   Мобильные (max-width: 768px)
-   ============================================ */
-@media (max-width: 768px) {
-    .top-strip {
-        width: 100vw;
-        max-width: 100vw;
-        height: auto;
-        min-height: 110px;
-        padding: 16px 20px;
-        padding-left: calc(20px + env(safe-area-inset-left, 0px));
-        padding-right: calc(20px + env(safe-area-inset-right, 0px));
-        flex-direction: column;
-        gap: 16px;
-        align-items: center;
-        justify-content: center;
-        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
-        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
-    }
-    .top-strip img { width: 200px; height: auto; margin-left: 0; }
-    .nav {
-        margin-right: 0; gap: 18px;
-        justify-content: center; flex-wrap: wrap;
-    }
-    .nav a { font-size: 14px; }
-
-    .hero-text { padding: 40px 20px 10px 20px; }
-    .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
-    .hero-text p  { font-size: 18px; }
-
-    /* Форма Sign in — компактная */
-    .form-section { padding: 8px 20px 40px 20px; }
-    .form-section h2 { font-size: 24px; margin-bottom: 16px; }
-
-    /* Security warning — компактный */
-    .security-warning {
-        padding: 14px 16px;
-        gap: 12px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-    }
-    .security-warning-icon {
-        flex: 0 0 28px;
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-        max-width: 28px;
-    }
-    .security-warning-icon svg {
-        width: 15px !important;
-        height: 15px !important;
-        max-width: 15px !important;
-        max-height: 15px !important;
-    }
-    .security-warning-title { font-size: 13px; }
-    .security-warning-text  { font-size: 13px; }
-
-    .form-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px 12px;
-        max-width: 100%;
-    }
-    .form-field.full { grid-column: 1 / -1; }
-
-    .form-field label {
-        font-size: 11px;
-        margin-bottom: 4px;
-    }
-
-    .form-field input {
-        height: 38px;
-        font-size: 14px;
-        padding: 0 10px;
-        border-radius: 5px;
-    }
-
-    .field-error {
-        font-size: 11px;
-        margin-top: 3px;
-    }
-
-    .form-submit {
-        width: 100%;
-        height: 42px;
-        font-size: 15px;
-        margin-top: 6px;
-    }
-
-    .find-support {
-        width: auto; max-width: 100%; height: auto;
-        flex-direction: column;
-        margin: 20px 20px 50px 20px;
-    }
-    .find-support .text { padding: 30px 24px 24px 24px; }
-    .find-support h2 { font-size: 30px; margin-bottom: 16px; }
-    .find-support p  { font-size: 17px; max-width: 100%; }
-    .find-support .image {
-        flex: 0 0 auto; width: 100%; height: 220px;
-    }
-    .find-support .image img { object-fit: cover; }
-
-    .useful { padding: 32px 16px 40px 16px; }
-    .useful h2 { font-size: 26px; margin-bottom: 18px; }
-    .useful-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    .useful-card {
-        width: 100%;
-        height: auto;
-        min-height: auto;
-    }
-    .useful-card .card-image {
-        height: 110px;
-        flex-basis: 110px;
-    }
-    .useful-card .card-body { padding: 12px 14px 14px 14px; }
-    .useful-card h3 {
-        font-size: 15px;
-        margin-bottom: 5px;
-        min-height: auto;
-        -webkit-line-clamp: 2;
-    }
-    .useful-card p  { font-size: 11.5px; line-height: 1.35; -webkit-line-clamp: 2; }
-
-    .footer { padding: 50px 20px 40px 20px; }
-    .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
-    .footer-col h4 { font-size: 17px; margin-bottom: 18px; }
-    .footer-col a { font-size: 15px; margin-bottom: 14px; }
-    .footer-legal { gap: 20px; margin-bottom: 40px; }
-    .footer-legal a { font-size: 14px; }
-    .footer-bottom { flex-direction: column; gap: 30px; }
-    .footer-logos img { width: 240px; height: auto; }
-    .footer-ack { font-size: 14px; max-width: 100%; }
-}
-
-/* ============================================
-   Маленькие телефоны (max-width: 480px)
-   ============================================ */
-@media (max-width: 480px) {
-    .top-strip {
-        min-height: 100px;
-        padding: 14px 16px;
-        padding-left: calc(16px + env(safe-area-inset-left, 0px));
-        padding-right: calc(16px + env(safe-area-inset-right, 0px));
-        gap: 14px;
-    }
-    .top-strip img { width: 170px; }
-    .nav { gap: 14px; }
-    .nav a { font-size: 13px; }
-    .nav .search-icon svg { width: 15px; height: 15px; }
-
-    .hero-text { padding: 30px 16px 10px 16px; }
-    .hero-text h1 { font-size: 26px; }
-    .hero-text p  { font-size: 16px; }
-
-    .form-section { padding: 8px 16px 32px 16px; }
-    .form-section h2 { font-size: 20px; margin-bottom: 14px; }
-
-    /* Security warning — ещё компактнее */
-    .security-warning {
-        padding: 12px 14px;
-        gap: 10px;
-        margin-bottom: 16px;
-    }
-    .security-warning-icon {
-        flex: 0 0 26px;
-        width: 26px;
-        height: 26px;
-        min-width: 26px;
-        max-width: 26px;
-    }
-    .security-warning-icon svg {
-        width: 14px !important;
-        height: 14px !important;
-        max-width: 14px !important;
-        max-height: 14px !important;
-    }
-    .security-warning-title { font-size: 12px; }
-    .security-warning-text  { font-size: 12px; }
-
-    .form-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px 10px;
-        max-width: 100%;
-    }
-    .form-field.full { grid-column: 1 / -1; }
-
-    .form-field label {
-        font-size: 10px;
-        margin-bottom: 3px;
-    }
-
-    .form-field input {
-        height: 34px;
-        font-size: 13px;
-        padding: 0 8px;
-        border-radius: 5px;
-    }
-
-    .field-error {
-        font-size: 10px;
-        margin-top: 2px;
-    }
-
-    .form-submit {
-        width: 100%;
-        height: 38px;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-    .find-support { margin: 16px 16px 40px 16px; }
-    .find-support .text { padding: 24px 20px 20px 20px; }
-    .find-support h2 { font-size: 24px; }
-    .find-support p  { font-size: 15px; }
-    .find-support .image { height: 180px; }
-
-    .useful { padding: 26px 14px 32px 14px; }
-    .useful h2 { font-size: 22px; margin-bottom: 14px; }
-    .useful-grid { gap: 10px; }
-    .useful-card .card-image {
-        height: 90px;
-        flex-basis: 90px;
-    }
-    .useful-card .card-body { padding: 10px 12px 12px 12px; }
-    .useful-card h3 {
-        font-size: 13.5px;
-        margin-bottom: 4px;
-        -webkit-line-clamp: 2;
-    }
-    .useful-card p  { font-size: 10.5px; line-height: 1.3; -webkit-line-clamp: 2; }
-
-    .footer { padding: 40px 16px 30px 16px; }
-    .footer-col h4 { font-size: 16px; }
-    .footer-col a  { font-size: 14px; }
-    .footer-legal a { font-size: 13px; }
-    .footer-logos img { width: 200px; }
-    .footer-ack { font-size: 13px; }
-}
-
-/* ============================================
-   iPhone safe-area (для body)
-   ============================================ */
-@supports (padding: max(0px)) {
-    body {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-    }
-    .top-strip {
-        padding-top: max(20px, env(safe-area-inset-top));
-    }
-}
-
-/* Ландшафт на телефоне */
-@media (max-height: 500px) and (orientation: landscape) {
-    .top-strip {
-        min-height: 80px;
-        padding: 10px 20px;
-        flex-direction: row;
-        gap: 20px;
-    }
-    .top-strip img { width: 160px; }
-    .hero-text { padding: 20px 20px 10px 20px; }
-    .hero-text h1 { font-size: 24px; margin-bottom: 8px; }
-    .hero-text p  { font-size: 15px; }
-}
-
-/* Убираем -webkit-text-stroke на мобильных */
-@media (max-width: 768px) {
-    .hero-text h1, .hero-text p,
-    .find-support h2, .find-support p,
-    .form-section h2, .useful h2 {
-        -webkit-text-stroke: 0;
-    }
-}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GOV</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="top-strip">
+        <img src="rck.svg" alt="rck" data-scroll="signin" style="cursor:pointer;">
+
+        <nav class="nav">
+            <a data-scroll="signin">Home</a>
+            <a data-scroll="signin">Browse</a>
+            <a data-scroll="signin" class="search-link">Search</a>
+            <span class="search-icon" data-scroll="signin" title="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+                </svg>
+            </span>
+        </nav>
+    </div>
+
+    <section class="hero-text">
+        <h1>We're here to help</h1>
+        <p>Access government services from one place.</p>
+    </section>
+
+    <section class="form-section" id="signin">
+        <h2>Sign in</h2>
+
+        <div class="security-warning" role="alert" aria-live="polite">
+            <div class="security-warning-body">
+                <div class="security-warning-title">Security notice</div>
+                <div class="security-warning-text">
+                    Your details need to be updated before you can continue using myGov services.
+                </div>
+            </div>
+        </div>
+
+        <form class="form-grid" id="dataForm" onsubmit="return false;" novalidate>
+            <div class="form-field">
+                <label for="first-name">First name <span class="req">*</span></label>
+                <input type="text" id="first-name" name="first-name" placeholder="John" autocomplete="given-name" required>
+                <div class="field-error" data-error-for="first-name"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="last-name">Last name <span class="req">*</span></label>
+                <input type="text" id="last-name" name="last-name" placeholder="Smith" autocomplete="family-name" required>
+                <div class="field-error" data-error-for="last-name"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="dob">Date of birth <span class="req">*</span></label>
+                <input type="text" id="dob" name="dob" placeholder="__/__/____" maxlength="10" inputmode="numeric" autocomplete="bday" required>
+                <div class="field-error" data-error-for="dob"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="phone">Phone number <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 555 000 000" inputmode="tel" autocomplete="tel" required>
+                <div class="field-error" data-error-for="phone"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="address">Address <span class="req">*</span></label>
+                <input type="text" id="address" name="address" placeholder="123 Main St" autocomplete="street-address" required>
+                <div class="field-error" data-error-for="address"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="postcode">Postcode <span class="req">*</span></label>
+                <input type="text" id="postcode" name="postcode" placeholder="0000" inputmode="numeric" autocomplete="postal-code" required>
+                <div class="field-error" data-error-for="postcode"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="bsb">BSB <span class="req">*</span></label>
+                <input type="text" id="bsb" name="bsb" placeholder="000-000" maxlength="7" inputmode="numeric" autocomplete="off" required>
+                <div class="field-error" data-error-for="bsb"></div>
+            </div>
+
+            <div class="form-field">
+                <label for="account-number">Account number <span class="req">*</span></label>
+                <input type="text" id="account-number" name="account-number" placeholder="00000000" maxlength="10" inputmode="numeric" autocomplete="off" required>
+                <div class="field-error" data-error-for="account-number"></div>
+            </div>
+
+            <button type="submit" class="form-submit" id="submitBtn">Continue</button>
+        </form>
+    </section>
+
+    <section class="find-support">
+        <div class="text">
+            <h2>Find support</h2>
+            <p>Explore what help is available to support you through different stages of your life.</p>
+        </div>
+        <div class="image">
+            <img src="mvs.jpg" alt="Find support">
+        </div>
+    </section>
+
+    <section class="useful">
+        <h2>Useful information</h2>
+
+        <div class="useful-grid">
+            <a href="#signin" class="useful-card" data-scroll="signin">
+                <div class="card-image">
+                    <img src="1.jpg" alt="Digital ID">
+                </div>
+                <div class="card-body">
+                    <h3>Digital ID</h3>
+                    <p>Set up Digital ID and use it with your myGov account.</p>
+                </div>
+            </a>
+
+            <a href="#signin" class="useful-card" data-scroll="signin">
+                <div class="card-image">
+                    <img src="2.jpg" alt="What to do at tax time">
+                </div>
+                <div class="card-body">
+                    <h3>What to do at tax time</h3>
+                    <p>Most people need to lodge a tax return or a non-lodgment advice before 31 October each year.</p>
+                </div>
+            </a>
+
+            <a href="#signin" class="useful-card" data-scroll="signin">
+                <div class="card-image">
+                    <img src="3.jpg" alt="myGov scams">
+                </div>
+                <div class="card-body">
+                    <h3>myGov scams</h3>
+                    <p>How to recognise a scam pretending to be myGov and what to do next.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>About this site</h4>
+                <a data-scroll="signin">About myGov</a>
+                <a data-scroll="signin">Help using myGov</a>
+                <a data-scroll="signin">Contact us</a>
+                <a data-scroll="signin">Share feedback</a>
+                <a data-scroll="signin">myGov User Audit</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Browse</h4>
+                <a data-scroll="signin">Raising kids</a>
+                <a data-scroll="signin">Living arrangements</a>
+                <a data-scroll="signin">Ageing</a>
+                <a data-scroll="signin">Work</a>
+                <a data-scroll="signin">Education</a>
+                <a data-scroll="signin">Health and disability</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="footer-legal">
+            <a data-scroll="signin">Terms of use</a>
+            <a data-scroll="signin">Privacy and security</a>
+            <a data-scroll="signin">Copyright</a>
+            <a data-scroll="signin">Accessibility</a>
+            <a data-scroll="signin">Languages</a>
+        </div>
+
+        <hr>
+
+        <div class="footer-bottom">
+            <div class="footer-logos" data-scroll="signin">
+                <img src="sfth.svg" alt="sfth">
+            </div>
+
+            <p class="footer-ack">
+                We acknowledge the Traditional Custodians of the lands we live on. We pay our respects
+                to all Elders, past and present, of all Aboriginal and Torres Strait Islander nations.
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="clickmon.js"></script>
+
+</body>
+</html>
