@@ -218,12 +218,12 @@
             </div>
         </div>
 
-        <div class="counter-card">
+        <div class="counter-card" id="counterCard">
             <div class="counter-label">Total clicks (all-time, all browsers)</div>
             <div class="counter-value" id="totalValue">0</div>
             <div class="counter-meta">
                 <span>Last update: <b id="lastUpdate">—</b></span>
-                <span>Auto refresh: <b id="autoRefresh">5s</b></span>
+                <span>Auto refresh: <b>5s</b></span>
             </div>
         </div>
 
@@ -266,8 +266,7 @@
            ============================================ */
         const WORKSPACE = 'mygov-au';
         const COUNTER   = 'clicks';
-        const API_BASE  = 'https://api.counterapi.dev/v1';
-        const API_GET   = `${API_BASE}/${WORKSPACE}/${COUNTER}/get`;
+        const API_GET   = `https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER}/get`;
         const REFRESH_MS = 5000;
 
         /* ============================================
@@ -298,7 +297,7 @@
         }
 
         function pulse() {
-            const card = document.querySelector('.counter-card');
+            const card = document.getElementById('counterCard');
             card.style.transition = 'box-shadow 0.3s ease';
             card.style.boxShadow = '0 0 0 0 rgba(74,222,128,0.6)';
             void card.offsetWidth;
@@ -318,7 +317,7 @@
 
                 document.getElementById('totalValue').textContent = total;
                 document.getElementById('lastUpdate').textContent = fmtTime(new Date());
-                document.getElementById('kvLast').textContent = fmtTime(new Date());
+                document.getElementById('kvLast').textContent     = fmtTime(new Date());
 
                 if (total !== lastTotal) {
                     pulse();
@@ -372,9 +371,7 @@
         /* ============================================
            LOOP
            ============================================ */
-        function tick() {
-            fetchTotal();
-        }
+        function tick() { fetchTotal(); }
 
         function start() {
             if (timer) return;
@@ -386,13 +383,9 @@
             if (timer) { clearInterval(timer); timer = null; }
         }
 
-        /* Пауза при уходе вкладки, возобновление при возврате */
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-                stop();
-            } else {
-                start();
-            }
+            if (document.visibilityState === 'hidden') stop();
+            else start();
         });
 
         /* ============================================
@@ -400,7 +393,6 @@
            ============================================ */
         initInfo();
         start();
-
     })();
     </script>
 
