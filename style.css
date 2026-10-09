@@ -1,10 +1,5 @@
 /* ============================================================
-   style.css — финал
-   - Карточки .useful на телефоне меньше
-   - Синяя полоса .top-strip до краёв экрана + safe-area
-   - Форма Sign in компактная на мобиле
-   - Security warning без иконки
-   - Подсветка обязательных полей
+   style.css
    ============================================================ */
 
 * {
@@ -13,31 +8,21 @@
     box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-    overflow-x: hidden;
-}
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #fff;
     scroll-behavior: smooth;
 }
 
-/* Первые 180 пикселей — голубые, во всю ширину экрана */
+/* --- TOP STRIP --- */
 .top-strip {
     height: 180px;
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
     background-color: #87CEEB;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
-    margin-left: calc(-1 * env(safe-area-inset-left, 0px));
-    margin-right: calc(-1 * env(safe-area-inset-right, 0px));
-    padding-left: calc(40px + env(safe-area-inset-left, 0px));
-    padding-right: calc(40px + env(safe-area-inset-right, 0px));
 }
 
 .top-strip img {
@@ -90,7 +75,7 @@ body {
     display: block;
 }
 
-/* Hero */
+/* --- HERO --- */
 .hero-text {
     padding: 70px 40px 20px 290px;
     font-family: Helvetica, Arial, sans-serif;
@@ -115,7 +100,7 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* Sign in */
+/* --- SIGN IN --- */
 .form-section {
     padding: 10px 40px 60px 290px;
     font-family: Helvetica, Arial, sans-serif;
@@ -130,10 +115,7 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* ============================================
-   Security warning — без иконки
-   ============================================ */
-
+/* Security warning */
 .security-warning {
     background: linear-gradient(135deg, #fff8ec 0%, #fff3dd 100%);
     border: 1px solid #f0c983;
@@ -148,9 +130,7 @@ body {
     box-shadow: 0 2px 10px rgba(230, 138, 0, 0.08);
 }
 
-.security-warning-body {
-    min-width: 0;
-}
+.security-warning-body { min-width: 0; }
 
 .security-warning-title {
     font-size: 14px;
@@ -223,12 +203,9 @@ body {
     color: #b91c1c;
     margin-top: 4px;
     font-weight: 500;
-    letter-spacing: 0.1px;
 }
 
-.field-error:empty {
-    display: none;
-}
+.field-error:empty { display: none; }
 
 .form-field.full { grid-column: 1 / -1; }
 
@@ -248,11 +225,9 @@ body {
     transition: background 0.15s ease;
 }
 
-.form-submit:hover {
-    background: #2a2a2a;
-}
+.form-submit:hover { background: #2a2a2a; }
 
-/* Find support */
+/* --- FIND SUPPORT --- */
 .find-support {
     width: 882px;
     height: 350px;
@@ -304,7 +279,7 @@ body {
     object-fit: cover;
 }
 
-/* Useful */
+/* --- USEFUL --- */
 .useful {
     background: #f1f1f1;
     padding: 70px 40px 90px 290px;
@@ -342,9 +317,7 @@ body {
     color: inherit;
 }
 
-.useful-card:hover {
-    border-color: #cfcfcf;
-}
+.useful-card:hover { border-color: #cfcfcf; }
 
 .useful-card .card-image {
     width: 100%;
@@ -399,7 +372,7 @@ body {
     min-height: 0;
 }
 
-/* Footer */
+/* --- FOOTER --- */
 .footer {
     background: #000;
     color: #fff;
@@ -413,10 +386,7 @@ body {
     margin-bottom: 50px;
 }
 
-.footer-col {
-    display: flex;
-    flex-direction: column;
-}
+.footer-col { display: flex; flex-direction: column; }
 
 .footer-col h4 {
     font-size: 18px;
@@ -439,9 +409,7 @@ body {
     cursor: pointer;
 }
 
-.footer-col a:hover {
-    border-bottom-color: #fff;
-}
+.footer-col a:hover { border-bottom-color: #fff; }
 
 .footer hr {
     border: 0;
@@ -466,9 +434,7 @@ body {
     cursor: pointer;
 }
 
-.footer-legal a:hover {
-    border-bottom-color: #fff;
-}
+.footer-legal a:hover { border-bottom-color: #fff; }
 
 .footer-bottom {
     display: flex;
@@ -478,10 +444,7 @@ body {
     flex-wrap: wrap;
 }
 
-.footer-logos {
-    flex-shrink: 0;
-    cursor: pointer;
-}
+.footer-logos { flex-shrink: 0; cursor: pointer; }
 
 .footer-logos img {
     width: 313px;
@@ -498,18 +461,13 @@ body {
     color: #fff;
 }
 
-#signin {
-    scroll-margin-top: 20px;
-}
+#signin { scroll-margin-top: 20px; }
 
 /* ============================================
-   Планшеты (max-width: 1024px)
+   ПЛАНШЕТ (max-width: 1024px)
    ============================================ */
 @media (max-width: 1024px) {
-    .top-strip {
-        padding-left: calc(30px + env(safe-area-inset-left, 0px));
-        padding-right: calc(30px + env(safe-area-inset-right, 0px));
-    }
+    .top-strip { padding: 0 30px; }
     .top-strip img { margin-left: 0; width: 260px; height: auto; }
     .nav { margin-right: 0; gap: 20px; }
     .nav a { font-size: 16px; }
@@ -550,37 +508,28 @@ body {
 }
 
 /* ============================================
-   Мобильные (max-width: 768px)
+   МОБИЛА (max-width: 768px)
    ============================================ */
 @media (max-width: 768px) {
     .top-strip {
-        width: 100vw;
-        max-width: 100vw;
-        height: auto;
-        min-height: 110px;
-        padding: 16px 20px;
-        padding-left: calc(20px + env(safe-area-inset-left, 0px));
-        padding-right: calc(20px + env(safe-area-inset-right, 0px));
-        flex-direction: column;
-        gap: 16px;
-        align-items: center;
-        justify-content: center;
-        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
-        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+        height: auto; min-height: 120px;
+        padding: 20px;
+        flex-direction: column; gap: 20px;
+        align-items: center; justify-content: center;
     }
-    .top-strip img { width: 200px; height: auto; margin-left: 0; }
+    .top-strip img { width: 220px; height: auto; margin-left: 0; }
     .nav {
-        margin-right: 0; gap: 18px;
+        margin-right: 0; gap: 20px;
         justify-content: center; flex-wrap: wrap;
     }
-    .nav a { font-size: 14px; }
+    .nav a { font-size: 15px; }
 
     .hero-text { padding: 40px 20px 10px 20px; }
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    .form-section { padding: 8px 20px 40px 20px; }
-    .form-section h2 { font-size: 24px; margin-bottom: 16px; }
+    .form-section { padding: 10px 20px 50px 20px; }
+    .form-section h2 { font-size: 26px; margin-bottom: 20px; }
 
     .security-warning {
         padding: 14px 16px;
@@ -592,33 +541,22 @@ body {
 
     .form-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 10px 12px;
+        gap: 14px;
         max-width: 100%;
     }
     .form-field.full { grid-column: 1 / -1; }
 
-    .form-field label {
-        font-size: 11px;
-        margin-bottom: 4px;
-    }
-
     .form-field input {
-        height: 38px;
-        font-size: 14px;
-        padding: 0 10px;
-        border-radius: 5px;
+        height: 46px;
+        font-size: 16px;
+        padding: 0 12px;
     }
-
-    .field-error {
-        font-size: 11px;
-        margin-top: 3px;
-    }
+    .form-field label { font-size: 12px; }
 
     .form-submit {
         width: 100%;
-        height: 42px;
-        font-size: 15px;
-        margin-top: 6px;
+        height: 50px;
+        font-size: 16px;
     }
 
     .find-support {
@@ -634,11 +572,12 @@ body {
     }
     .find-support .image img { object-fit: cover; }
 
-    .useful { padding: 32px 16px 40px 16px; }
-    .useful h2 { font-size: 26px; margin-bottom: 18px; }
+    /* Карточки Useful — уменьшены */
+    .useful { padding: 40px 20px 50px 20px; }
+    .useful h2 { font-size: 30px; margin-bottom: 24px; }
     .useful-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 16px;
     }
     .useful-card {
         width: 100%;
@@ -646,17 +585,17 @@ body {
         min-height: auto;
     }
     .useful-card .card-image {
-        height: 110px;
-        flex-basis: 110px;
+        height: 140px;
+        flex-basis: 140px;
     }
-    .useful-card .card-body { padding: 12px 14px 14px 14px; }
+    .useful-card .card-body { padding: 16px 18px 18px 18px; }
     .useful-card h3 {
-        font-size: 15px;
-        margin-bottom: 5px;
+        font-size: 18px;
+        margin-bottom: 8px;
         min-height: auto;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 11.5px; line-height: 1.35; -webkit-line-clamp: 2; }
+    .useful-card p  { font-size: 13px; line-height: 1.4; -webkit-line-clamp: 3; }
 
     .footer { padding: 50px 20px 40px 20px; }
     .footer-top { flex-direction: column; gap: 40px; margin-bottom: 40px; }
@@ -670,27 +609,20 @@ body {
 }
 
 /* ============================================
-   Маленькие телефоны (max-width: 480px)
+   МАЛЫЙ ТЕЛЕФОН (max-width: 480px)
    ============================================ */
 @media (max-width: 480px) {
-    .top-strip {
-        min-height: 100px;
-        padding: 14px 16px;
-        padding-left: calc(16px + env(safe-area-inset-left, 0px));
-        padding-right: calc(16px + env(safe-area-inset-right, 0px));
-        gap: 14px;
-    }
-    .top-strip img { width: 170px; }
-    .nav { gap: 14px; }
-    .nav a { font-size: 13px; }
-    .nav .search-icon svg { width: 15px; height: 15px; }
+    .top-strip img { width: 180px; }
+    .nav { gap: 16px; }
+    .nav a { font-size: 14px; }
+    .nav .search-icon svg { width: 16px; height: 16px; }
 
     .hero-text { padding: 30px 16px 10px 16px; }
     .hero-text h1 { font-size: 26px; }
     .hero-text p  { font-size: 16px; }
 
-    .form-section { padding: 8px 16px 32px 16px; }
-    .form-section h2 { font-size: 20px; margin-bottom: 14px; }
+    .form-section { padding: 10px 16px 40px 16px; }
+    .form-section h2 { font-size: 22px; }
 
     .security-warning {
         padding: 12px 14px;
@@ -701,33 +633,21 @@ body {
 
     .form-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 8px 10px;
-        max-width: 100%;
+        gap: 12px;
     }
     .form-field.full { grid-column: 1 / -1; }
 
-    .form-field label {
-        font-size: 10px;
-        margin-bottom: 3px;
-    }
-
     .form-field input {
-        height: 34px;
-        font-size: 13px;
-        padding: 0 8px;
-        border-radius: 5px;
+        height: 44px;
+        font-size: 15px;
+        padding: 0 10px;
     }
-
-    .field-error {
-        font-size: 10px;
-        margin-top: 2px;
-    }
+    .form-field label { font-size: 11px; }
 
     .form-submit {
         width: 100%;
-        height: 38px;
-        font-size: 14px;
-        margin-top: 5px;
+        height: 46px;
+        font-size: 15px;
     }
 
     .find-support { margin: 16px 16px 40px 16px; }
@@ -736,20 +656,21 @@ body {
     .find-support p  { font-size: 15px; }
     .find-support .image { height: 180px; }
 
-    .useful { padding: 26px 14px 32px 14px; }
-    .useful h2 { font-size: 22px; margin-bottom: 14px; }
-    .useful-grid { gap: 10px; }
+    /* Карточки Useful — ещё меньше */
+    .useful { padding: 32px 16px 40px 16px; }
+    .useful h2 { font-size: 24px; margin-bottom: 20px; }
+    .useful-grid { gap: 12px; }
     .useful-card .card-image {
-        height: 90px;
-        flex-basis: 90px;
+        height: 120px;
+        flex-basis: 120px;
     }
-    .useful-card .card-body { padding: 10px 12px 12px 12px; }
+    .useful-card .card-body { padding: 14px 14px 16px 14px; }
     .useful-card h3 {
-        font-size: 13.5px;
-        margin-bottom: 4px;
+        font-size: 16px;
+        margin-bottom: 6px;
         -webkit-line-clamp: 2;
     }
-    .useful-card p  { font-size: 10.5px; line-height: 1.3; -webkit-line-clamp: 2; }
+    .useful-card p  { font-size: 12px; line-height: 1.35; -webkit-line-clamp: 2; }
 
     .footer { padding: 40px 16px 30px 16px; }
     .footer-col h4 { font-size: 16px; }
@@ -760,7 +681,7 @@ body {
 }
 
 /* ============================================
-   iPhone safe-area (для body)
+   iPhone safe-area
    ============================================ */
 @supports (padding: max(0px)) {
     body {
@@ -772,13 +693,11 @@ body {
     }
 }
 
-/* Ландшафт на телефоне */
+/* Ландшафт */
 @media (max-height: 500px) and (orientation: landscape) {
     .top-strip {
-        min-height: 80px;
-        padding: 10px 20px;
-        flex-direction: row;
-        gap: 20px;
+        min-height: 80px; padding: 10px 20px;
+        flex-direction: row; gap: 20px;
     }
     .top-strip img { width: 160px; }
     .hero-text { padding: 20px 20px 10px 20px; }
