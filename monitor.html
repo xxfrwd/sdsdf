@@ -1,23 +1,408 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Monitor</title></head>
-<body style="font-family:sans-serif;padding:40px;background:#0f1115;color:#fff">
-  <h1>🖱 Global Clicks</h1>
-  <div id="total" style="font-size:96px;font-weight:800">0</div>
-  <div id="status">Connecting...</div>
-  <script>
-    async function tick() {
-      try {
-        const r = await fetch('/api/stats');
-        const d = await r.json();
-        document.getElementById('total').textContent = d.total || 0;
-        document.getElementById('status').textContent = 'Connected · updates every 5s';
-      } catch (e) {
-        document.getElementById('status').textContent = 'Disconnected';
-      }
-    }
-    tick();
-    setInterval(tick, 5000);
-  </script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0f1115;
+            color: #e6e6e6;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 880px; }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            background: linear-gradient(90deg, #4ade80, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #8a8f98;
+            margin-bottom: 32px;
+        }
+
+        .counter-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #151922 100%);
+            border: 1px solid #232836;
+            border-radius: 14px;
+            padding: 36px 40px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .counter-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4ade80, #38bdf8, #a78bfa);
+        }
+
+        .counter-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .counter-value {
+            font-size: 96px;
+            font-weight: 800;
+            line-height: 1;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -4px;
+            text-shadow: 0 0 40px rgba(74, 222, 128, 0.35);
+        }
+
+        .counter-meta {
+            margin-top: 16px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: #8a8f98;
+        }
+
+        .counter-meta b { color: #c4c8cf; font-weight: 600; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #2a3140;
+            background: #1a1f2e;
+            color: #e6e6e6;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            letter-spacing: 0.2px;
+        }
+
+        button:hover { background: #232836; border-color: #3a4255; }
+
+        button.primary {
+            background: linear-gradient(135deg, #4ade80, #38bdf8);
+            color: #0f1115;
+            border: none;
+        }
+
+        button.primary:hover { filter: brightness(1.1); }
+
+        .panel {
+            background: #151922;
+            border: 1px solid #232836;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+            color: #6b7280;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #8a8f98;
+            margin-left: auto;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 8px #4ade80;
+            animation: blink 2s infinite;
+        }
+
+        .status-dot.err {
+            background: #f87171;
+            box-shadow: 0 0 8px #f87171;
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.4; }
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-row .titles { flex: 1; min-width: 200px; }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            row-gap: 12px;
+            column-gap: 20px;
+            font-size: 14px;
+        }
+
+        .info-row .k { color: #8a8f98; }
+
+        .info-row .v {
+            color: #e6e6e6;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+            word-break: break-all;
+        }
+
+        .info-row .v code {
+            background: #0f1115;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #38bdf8;
+        }
+
+        @media (max-width: 600px) {
+            .counter-value { font-size: 64px; letter-spacing: -2px; }
+            .counter-card { padding: 24px; }
+            .info-row { grid-template-columns: 120px 1fr; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="header-row">
+            <div class="titles">
+                <h1>🖱 Click Monitor</h1>
+                <div class="subtitle">Global stats · AUS LOG 🇦🇺🌏</div>
+            </div>
+            <div class="status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Connecting…</span>
+            </div>
+        </div>
+
+        <div class="counter-card">
+            <div class="counter-label">Total clicks (all-time, all browsers)</div>
+            <div class="counter-value" id="totalValue">0</div>
+            <div class="counter-meta">
+                <span>Last update: <b id="lastUpdate">—</b></span>
+                <span>Auto refresh: <b id="autoRefresh">5s</b></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="primary" id="refreshBtn">🔄 Refresh now</button>
+            <button id="copyBtn">📋 Copy total</button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">Info</div>
+            <div class="info-row">
+                <div class="k">Provider</div>
+                <div class="v"><code>api.counterapi.dev</code></div>
+
+                <div class="k">Workspace</div>
+                <div class="v"><code id="kvWorkspace">—</code></div>
+
+                <div class="k">Counter</div>
+                <div class="v"><code id="kvCounter">—</code></div>
+
+                <div class="k">Endpoint</div>
+                <div class="v"><code id="kvEndpoint">—</code></div>
+
+                <div class="k">Origin</div>
+                <div class="v" id="kvOrigin">—</div>
+
+                <div class="k">Last seen</div>
+                <div class="v" id="kvLast">—</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+
+        /* ============================================
+           CONFIG — те же значения, что в clickmon.js
+           ============================================ */
+        const WORKSPACE = 'mygov-au';
+        const COUNTER   = 'clicks';
+        const API_BASE  = 'https://api.counterapi.dev/v1';
+        const API_GET   = `${API_BASE}/${WORKSPACE}/${COUNTER}/get`;
+        const REFRESH_MS = 5000;
+
+        /* ============================================
+           STATE
+           ============================================ */
+        let lastTotal = -1;
+        let timer = null;
+
+        /* ============================================
+           HELPERS
+           ============================================ */
+        function fmtTime(d) {
+            if (!d) return '—';
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        }
+
+        function setStatus(ok, text) {
+            const dot = document.getElementById('statusDot');
+            const txt = document.getElementById('statusText');
+            if (ok) {
+                dot.classList.remove('err');
+                txt.textContent = text || 'Connected';
+            } else {
+                dot.classList.add('err');
+                txt.textContent = text || 'Disconnected';
+            }
+        }
+
+        function pulse() {
+            const card = document.querySelector('.counter-card');
+            card.style.transition = 'box-shadow 0.3s ease';
+            card.style.boxShadow = '0 0 0 0 rgba(74,222,128,0.6)';
+            void card.offsetWidth;
+            card.style.boxShadow = '0 0 0 14px rgba(74,222,128,0)';
+        }
+
+        /* ============================================
+           FETCH
+           ============================================ */
+        async function fetchTotal() {
+            try {
+                const res = await fetch(API_GET, { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                const total = (typeof data.count === 'number') ? data.count : 0;
+
+                document.getElementById('totalValue').textContent = total;
+                document.getElementById('lastUpdate').textContent = fmtTime(new Date());
+                document.getElementById('kvLast').textContent = fmtTime(new Date());
+
+                if (total !== lastTotal) {
+                    pulse();
+                    lastTotal = total;
+                }
+
+                setStatus(true, 'Connected');
+                return total;
+            } catch (e) {
+                console.error('[monitor]', e);
+                setStatus(false, 'Disconnected');
+                return null;
+            }
+        }
+
+        /* ============================================
+           INIT INFO
+           ============================================ */
+        function initInfo() {
+            document.getElementById('kvWorkspace').textContent = WORKSPACE;
+            document.getElementById('kvCounter').textContent   = COUNTER;
+            document.getElementById('kvEndpoint').textContent  = '/get';
+            document.getElementById('kvOrigin').textContent    = location.origin;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('refreshBtn');
+            const old = btn.textContent;
+            btn.textContent = '⏳ Loading…';
+            await fetchTotal();
+            btn.textContent = '✓ Updated';
+            setTimeout(() => btn.textContent = old, 800);
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', async () => {
+            const text = String(lastTotal >= 0 ? lastTotal : 0);
+            try {
+                await navigator.clipboard.writeText(text);
+                const btn = document.getElementById('copyBtn');
+                const old = btn.textContent;
+                btn.textContent = '✓ Copied: ' + text;
+                setTimeout(() => btn.textContent = old, 1200);
+            } catch (e) {
+                console.error('copy failed', e);
+            }
+        });
+
+        /* ============================================
+           LOOP
+           ============================================ */
+        function tick() {
+            fetchTotal();
+        }
+
+        function start() {
+            if (timer) return;
+            tick();
+            timer = setInterval(tick, REFRESH_MS);
+        }
+
+        function stop() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        /* Пауза при уходе вкладки, возобновление при возврате */
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                stop();
+            } else {
+                start();
+            }
+        });
+
+        /* ============================================
+           BOOT
+           ============================================ */
+        initInfo();
+        start();
+
+    })();
+    </script>
+
 </body>
 </html>
