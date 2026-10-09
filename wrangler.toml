@@ -1,0 +1,11 @@
+name = "mygov-click-counter"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[kv_namespaces]]
+binding = "CLICK_KV"
+id = "在这里粘贴你的KV_ID"
