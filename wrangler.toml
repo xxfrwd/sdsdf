@@ -5,7 +5,8 @@ compatibility_date = "2026-10-01"
 [assets]
 directory = "./public"
 binding = "ASSETS"
+not_found_handling = "single-page-application"
 
 [[kv_namespaces]]
 binding = "CLICK_KV"
-id = "在这里粘贴你的KV_ID"
+id = "这里粘贴KV_ID"
