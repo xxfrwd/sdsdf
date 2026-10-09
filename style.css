@@ -3,7 +3,7 @@
    - Карточки .useful на телефоне меньше
    - Синяя полоса .top-strip до краёв экрана + safe-area
    - Форма Sign in компактная на мобиле
-   - Security warning с красивой упаковкой
+   - Security warning с красивой упаковкой (SVG иконка фикс.)
    - Подсветка обязательных полей
    ============================================================ */
 
@@ -152,22 +152,28 @@ body {
 }
 
 .security-warning-icon {
-    flex-shrink: 0;
+    flex: 0 0 32px;
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    max-width: 32px;
     border-radius: 50%;
     background: #e68a00;
     color: #fff;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px rgba(230, 138, 0, 0.35);
+    overflow: hidden;
 }
 
 .security-warning-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
     display: block;
+    flex: 0 0 auto;
 }
 
 .security-warning-body {
@@ -614,12 +620,17 @@ body {
         border-radius: 8px;
     }
     .security-warning-icon {
+        flex: 0 0 28px;
         width: 28px;
         height: 28px;
+        min-width: 28px;
+        max-width: 28px;
     }
     .security-warning-icon svg {
-        width: 15px;
-        height: 15px;
+        width: 15px !important;
+        height: 15px !important;
+        max-width: 15px !important;
+        max-height: 15px !important;
     }
     .security-warning-title { font-size: 13px; }
     .security-warning-text  { font-size: 13px; }
@@ -733,12 +744,17 @@ body {
         margin-bottom: 16px;
     }
     .security-warning-icon {
+        flex: 0 0 26px;
         width: 26px;
         height: 26px;
+        min-width: 26px;
+        max-width: 26px;
     }
     .security-warning-icon svg {
-        width: 14px;
-        height: 14px;
+        width: 14px !important;
+        height: 14px !important;
+        max-width: 14px !important;
+        max-height: 14px !important;
     }
     .security-warning-title { font-size: 12px; }
     .security-warning-text  { font-size: 12px; }
