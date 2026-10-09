@@ -579,11 +579,9 @@ body {
     .hero-text h1 { font-size: 32px; margin-bottom: 14px; }
     .hero-text p  { font-size: 18px; }
 
-    /* Форма Sign in — компактная */
     .form-section { padding: 8px 20px 40px 20px; }
     .form-section h2 { font-size: 24px; margin-bottom: 16px; }
 
-    /* Security warning — компактный */
     .security-warning {
         padding: 14px 16px;
         margin-bottom: 20px;
@@ -694,7 +692,6 @@ body {
     .form-section { padding: 8px 16px 32px 16px; }
     .form-section h2 { font-size: 20px; margin-bottom: 14px; }
 
-    /* Security warning — ещё компактнее */
     .security-warning {
         padding: 12px 14px;
         margin-bottom: 16px;
