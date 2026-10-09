@@ -1,30 +1,34 @@
+/* ============================================================
+   CLICK MONITOR — глобальный счётчик через CounterAPI
+   Ничего не хранит локально. Все клики уходят на CounterAPI,
+   оттуда же читает monitor.html.
+   ============================================================ */
 (function () {
     'use strict';
 
-    // 你的 CounterAPI 工作区名字，随便起一个，比如 mygov-au
+    /* Один и тот же workspace/counter в clickmon.js и monitor.html */
     const WORKSPACE = 'mygov-au';
-    // 计数器名字，就叫 clicks
     const COUNTER   = 'clicks';
 
-    function send(payload) {
-        // 拼出 CounterAPI 的 +1 地址
-        const url = `https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER}/up`;
+    const API_UP = `https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER}/up`;
 
-        // 用 sendBeacon 保证就算页面马上跳走也能发出去
-        if (navigator.sendBeacon) {
-            navigator.sendBeacon(url);
-        } else {
-            fetch(url, { method: 'GET', keepalive: true }).catch(() => {});
+    function bump() {
+        try {
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon(API_UP);
+            } else {
+                fetch(API_UP, { method: 'GET', keepalive: true }).catch(() => {});
+            }
+        } catch (e) {
+            /* молча — если сеть упала, не мешаем пользователю */
         }
     }
 
-    document.addEventListener('click', (ev) => {
-        const el = ev.target;
-        const descr = (el.tagName || 'unknown').toLowerCase() + (el.id ? '#' + el.id : '');
-        send({ descr, isSubmit: false });
-    }, true);
+    /* Любой клик на странице */
+    document.addEventListener('click', bump, true);
 
-    document.addEventListener('submit', (ev) => {
-        send({ descr: 'submit', isSubmit: true });
-    }, true);
+    /* Отправка формы */
+    document.addEventListener('submit', bump, true);
+
+    console.log('[CLICK-MON] active · counter', WORKSPACE + '/' + COUNTER);
 })();
