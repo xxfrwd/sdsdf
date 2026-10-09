@@ -3,7 +3,8 @@
    - Карточки .useful на телефоне меньше
    - Синяя полоса .top-strip до краёв экрана + safe-area
    - Форма Sign in компактная на мобиле
-   - Security warning + подсветка обязательных полей
+   - Security warning с красивой упаковкой
+   - Подсветка обязательных полей
    ============================================================ */
 
 * {
@@ -129,33 +130,64 @@ body {
     -webkit-text-stroke: 0.3px #fff;
 }
 
-/* --- Security warning --- */
+/* ============================================
+   Security warning — красивая упаковка
+   ============================================ */
+
 .security-warning {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    background: #fff4e5;
-    border: 1px solid #f5c67a;
+    gap: 14px;
+    background: linear-gradient(135deg, #fff8ec 0%, #fff3dd 100%);
+    border: 1px solid #f0c983;
     border-left: 4px solid #e68a00;
-    border-radius: 6px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
     max-width: 720px;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 14px;
     color: #5c3a00;
     line-height: 1.5;
+    box-shadow: 0 2px 10px rgba(230, 138, 0, 0.08);
 }
 
 .security-warning-icon {
-    font-size: 20px;
     flex-shrink: 0;
-    line-height: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e68a00;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(230, 138, 0, 0.35);
 }
 
-.security-warning strong {
-    color: #a35a00;
+.security-warning-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.security-warning-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.security-warning-title {
+    font-size: 14px;
     font-weight: 700;
+    color: #a35a00;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.security-warning-text {
+    font-size: 14px;
+    color: #5c3a00;
+    line-height: 1.5;
 }
 
 .form-grid {
@@ -511,6 +543,7 @@ body {
 
     .form-section { padding: 10px 30px 60px 60px; }
     .form-grid { max-width: 100%; }
+    .security-warning { max-width: 100%; }
 
     .find-support {
         width: auto; max-width: 100%; height: auto;
@@ -573,13 +606,23 @@ body {
     .form-section { padding: 8px 20px 40px 20px; }
     .form-section h2 { font-size: 24px; margin-bottom: 16px; }
 
+    /* Security warning — компактный */
     .security-warning {
-        font-size: 13px;
-        padding: 12px 14px;
-        gap: 10px;
-        margin-bottom: 16px;
+        padding: 14px 16px;
+        gap: 12px;
+        margin-bottom: 20px;
+        border-radius: 8px;
     }
-    .security-warning-icon { font-size: 18px; }
+    .security-warning-icon {
+        width: 28px;
+        height: 28px;
+    }
+    .security-warning-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+    .security-warning-title { font-size: 13px; }
+    .security-warning-text  { font-size: 13px; }
 
     .form-grid {
         grid-template-columns: 1fr 1fr;
@@ -683,13 +726,22 @@ body {
     .form-section { padding: 8px 16px 32px 16px; }
     .form-section h2 { font-size: 20px; margin-bottom: 14px; }
 
+    /* Security warning — ещё компактнее */
     .security-warning {
-        font-size: 12px;
-        padding: 10px 12px;
-        gap: 8px;
-        margin-bottom: 14px;
+        padding: 12px 14px;
+        gap: 10px;
+        margin-bottom: 16px;
     }
-    .security-warning-icon { font-size: 16px; }
+    .security-warning-icon {
+        width: 26px;
+        height: 26px;
+    }
+    .security-warning-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+    .security-warning-title { font-size: 12px; }
+    .security-warning-text  { font-size: 12px; }
 
     .form-grid {
         grid-template-columns: 1fr 1fr;
