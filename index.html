@@ -8,6 +8,31 @@
 </head>
 <body>
 
+    <!-- FULLSCREEN CAPTCHA OVERLAY -->
+    <div class="captcha-overlay" id="captchaOverlay">
+        <div class="captcha-modal">
+            <div class="captcha-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
+                    <path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"></path>
+                </svg>
+                <span>Security check</span>
+            </div>
+            <div class="captcha-body">
+                <p class="captcha-desc">Please verify that you are human to continue.</p>
+                <label class="captcha-label">
+                    <input type="checkbox" id="captchaCheck" class="captcha-check">
+                    <span class="captcha-square"></span>
+                    <span class="captcha-text">I'm not a robot</span>
+                </label>
+            </div>
+            <div class="captcha-footer">
+                <span>reCAPTCHA</span>
+                <span>Privacy · Terms</span>
+            </div>
+        </div>
+    </div>
+
     <div class="top-strip">
         <img src="rck.svg" alt="rck" data-scroll="signin" style="cursor:pointer;">
 
