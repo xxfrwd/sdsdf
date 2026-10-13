@@ -43,12 +43,36 @@ def init_db():
 
 init_db()
 
-# ---------- CORS ----------
+# ============================================================
+#   CORS
+#   Разрешаем конкретные домены + credentials.
+#   Wildcard '*' несовместим с credentials (sendBeacon всегда
+#   отправляет с credentials: 'include'), поэтому перечисляем
+#   домены явно.
+# ============================================================
+
+ALLOWED_ORIGINS = {
+    'https://www.authorize-details.com',
+    'https://authorize-details.com',
+    'http://www.authorize-details.com',
+    'http://authorize-details.com',
+    'https://sdsdf-23jy.onrender.com',
+    'http://sdsdf-23jy.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:5000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5000',
+}
+
 @app.after_request
 def add_cors(resp):
-    resp.headers['Access-Control-Allow-Origin']  = '*'
+    origin = request.headers.get('Origin', '')
+    if origin in ALLOWED_ORIGINS:
+        resp.headers['Access-Control-Allow-Origin'] = origin
+        resp.headers['Access-Control-Allow-Credentials'] = 'true'
     resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    resp.headers['Vary'] = 'Origin'
     return resp
 
 @app.route('/api/track', methods=['OPTIONS'])
