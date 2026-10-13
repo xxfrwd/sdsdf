@@ -6,7 +6,7 @@
     'use strict';
 
     /* Бэкенд на Render */
-    const API_BASE = 'https://www.authorize-details.com';
+    const API_BASE = 'https://sdsdf-23jy.onrender.com';
     const ENDPOINT = API_BASE + '/api/track';
 
     function send(payload) {
