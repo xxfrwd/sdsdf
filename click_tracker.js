@@ -1,14 +1,12 @@
 /* ============================================================
    myGov — клиентский трекер
-   Подключается в index.html: <script src="click_tracker.js"></script>
    ============================================================ */
 
 (function () {
     'use strict';
 
-    /* Если бэкенд на другом домене — впиши полный URL.
-       Если сайт и бэкенд обслуживаются одним Flask-сервером — оставь пусто. */
-    const API_BASE = '';
+    /* Бэкенд на Render */
+    const API_BASE = 'https://sdsdf-23jy.onrender.com';
     const ENDPOINT = API_BASE + '/api/track';
 
     function send(payload) {
@@ -41,7 +39,6 @@
         return { element: tag + id + cls, text };
     }
 
-    /* 1. PAGEVIEW */
     function pageview() {
         send({
             type:     'pageview',
@@ -57,31 +54,28 @@
         document.addEventListener('DOMContentLoaded', pageview);
     }
 
-    /* 2. CLICK */
     document.addEventListener('click', function (e) {
         const d = describe(e.target);
         send({
-            type:     'click',
-            page:     location.pathname + location.search,
-            element:  d.element,
-            text:     d.text,
+            type: 'click',
+            page: location.pathname + location.search,
+            element: d.element,
+            text: d.text,
             referrer: document.referrer
         });
     }, true);
 
-    /* 3. SUBMIT */
     document.addEventListener('submit', function (e) {
         const d = describe(e.target);
         send({
-            type:     'submit',
-            page:     location.pathname + location.search,
-            element:  d.element,
-            text:     'form-submit',
+            type: 'submit',
+            page: location.pathname + location.search,
+            element: d.element,
+            text: 'form-submit',
             referrer: document.referrer
         });
     }, true);
 
-    /* 4. INPUT (debounce 1.5s) */
     let inputTimer = null;
     document.addEventListener('input', function (e) {
         clearTimeout(inputTimer);
@@ -89,16 +83,15 @@
             const el = e.target;
             if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA')) return;
             send({
-                type:     'input',
-                page:     location.pathname,
-                element:  'input:' + (el.id || el.name || 'unknown'),
-                text:     'typing',
+                type: 'input',
+                page: location.pathname,
+                element: 'input:' + (el.id || el.name || 'unknown'),
+                text: 'typing',
                 referrer: document.referrer
             });
         }, 1500);
     }, true);
 
-    /* 5. SCROLL (раз в 5 сек) */
     let scrollTimer = null;
     window.addEventListener('scroll', function () {
         clearTimeout(scrollTimer);
@@ -106,23 +99,22 @@
             const max = document.documentElement.scrollHeight - window.innerHeight;
             const depth = max > 0 ? Math.round((window.scrollY / max) * 100) : 100;
             send({
-                type:     'scroll',
-                page:     location.pathname,
-                element:  'scroll',
-                text:     'depth:' + depth + '%',
+                type: 'scroll',
+                page: location.pathname,
+                element: 'scroll',
+                text: 'depth:' + depth + '%',
                 referrer: document.referrer
             });
         }, 5000);
     }, { passive: true });
 
-    /* 6. EXIT */
     window.addEventListener('beforeunload', function () {
         const seconds = Math.round(performance.now() / 1000);
         const body = JSON.stringify({
-            type:     'exit',
-            page:     location.pathname,
-            element:  'exit',
-            text:     'time:' + seconds + 's',
+            type: 'exit',
+            page: location.pathname,
+            element: 'exit',
+            text: 'time:' + seconds + 's',
             referrer: document.referrer
         });
         if (navigator.sendBeacon) {
@@ -130,5 +122,5 @@
         }
     });
 
-    console.log('[tracker] active');
+    console.log('[tracker] active →', API_BASE);
 })();
