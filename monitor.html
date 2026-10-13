@@ -1,400 +1,556 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>myGov Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: #0f1115;
-            color: #e6e6e6;
-            min-height: 100vh;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        :root {
+            --bg-deep: #060a14;
+            --bg-light: #0c1a30;
+            --card-bg: rgba(12, 26, 48, 0.55);
+            --card-border: rgba(80, 180, 255, 0.14);
+            --accent-cyan: #38bdf8;
+            --accent-blue: #6366f1;
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --success: #34d399;
+            --text-primary: #e6f2ff;
+            --text-secondary: #7d9ab8;
         }
 
-        .container { width: 100%; max-width: 880px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-            background: linear-gradient(90deg, #4ade80, #38bdf8);
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(circle at 12% 15%, rgba(56, 189, 248, 0.14), transparent 45%),
+                radial-gradient(circle at 88% 85%, rgba(99, 102, 241, 0.12), transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(12, 26, 48, 0.9), var(--bg-deep) 80%);
+            z-index: -1;
+            animation: bgShift 24s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0%   { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.12) translate(-2%, -1%); }
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            text-align: center;
+            padding: 8px 0 26px;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .header-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 14px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 8px 32px var(--accent-glow);
+            animation: pulseGlow 3.2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 8px 28px var(--accent-glow); }
+            50%      { box-shadow: 0 8px 44px rgba(56, 189, 248, 0.55); }
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.4px;
         }
 
-        .subtitle {
-            font-size: 14px;
-            color: #8a8f98;
-            margin-bottom: 32px;
-        }
-
-        .counter-card {
-            background: linear-gradient(135deg, #1a1f2e 0%, #151922 100%);
-            border: 1px solid #232836;
-            border-radius: 14px;
-            padding: 36px 40px;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .counter-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #4ade80, #38bdf8, #a78bfa);
-        }
-
-        .counter-label {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #6b7280;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .counter-value {
-            font-size: 96px;
-            font-weight: 800;
-            line-height: 1;
-            color: #fff;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -4px;
-            text-shadow: 0 0 40px rgba(74, 222, 128, 0.35);
-        }
-
-        .counter-meta {
-            margin-top: 16px;
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            font-size: 13px;
-            color: #8a8f98;
-        }
-
-        .counter-meta b { color: #c4c8cf; font-weight: 600; }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: 1px solid #2a3140;
-            background: #1a1f2e;
-            color: #e6e6e6;
-            cursor: pointer;
-            transition: all 0.15s ease;
+        .header p {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-weight: 500;
             letter-spacing: 0.2px;
         }
 
-        button:hover { background: #232836; border-color: #3a4255; }
-
-        button.primary {
-            background: linear-gradient(135deg, #4ade80, #38bdf8);
-            color: #0f1115;
-            border: none;
-        }
-
-        button.primary:hover { filter: brightness(1.1); }
-
-        .panel {
-            background: #151922;
-            border: 1px solid #232836;
-            border-radius: 12px;
-            padding: 24px 28px;
-            margin-bottom: 20px;
-        }
-
-        .panel-title {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1.6px;
-            color: #6b7280;
+        /* ============ STATS ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
             margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px 12px 14px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.3s;
+            animation: fadeInUp 0.55s ease-out backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.10s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.20s; }
+
+        .stat-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0.5;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 12px 36px var(--accent-glow);
+            border-color: rgba(56, 189, 248, 0.35);
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -0.8px;
+        }
+
+        .stat-card .label {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            margin-top: 6px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
 
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #8a8f98;
-            margin-left: auto;
+        /* ============ CARDS ============ */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px 16px 14px;
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out backwards;
+            animation-delay: 0.25s;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4ade80;
-            box-shadow: 0 0 8px #4ade80;
-            animation: blink 2s infinite;
+        .card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.4;
         }
 
-        .status-dot.err {
-            background: #f87171;
-            box-shadow: 0 0 8px #f87171;
-            animation: none;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50%      { opacity: 0.4; }
-        }
-
-        .header-row {
+        .card h3 {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
+            letter-spacing: -0.2px;
         }
 
-        .header-row .titles { flex: 1; min-width: 200px; }
+        .card h3::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
 
-        .info-row {
-            display: grid;
-            grid-template-columns: 180px 1fr;
-            row-gap: 12px;
-            column-gap: 20px;
+        /* ============ LIST ============ */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(80, 180, 255, 0.07);
+            font-size: 13.5px;
+            transition: all 0.2s;
+        }
+
+        .list-item:last-child { border-bottom: none; }
+
+        .list-item:hover {
+            padding-left: 6px;
+            background: rgba(56, 189, 248, 0.04);
+            border-radius: 8px;
+        }
+
+        .list-item .rank {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: var(--bg-deep);
+            font-size: 10.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .list-item .name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .list-item .count {
+            font-weight: 800;
+            color: var(--accent-cyan);
+            margin-left: 12px;
             font-size: 14px;
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        .info-row .k { color: #8a8f98; }
-
-        .info-row .v {
-            color: #e6e6e6;
-            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
-            word-break: break-all;
+        /* ============ LOADING ============ */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 500;
         }
 
-        .info-row .v code {
-            background: #0f1115;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 13px;
-            color: #38bdf8;
+        .loading::before {
+            content: '';
+            display: block;
+            width: 38px;
+            height: 38px;
+            margin: 0 auto 16px;
+            border: 3px solid rgba(56, 189, 248, 0.15);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            box-shadow: 0 0 18px var(--accent-glow);
         }
 
-        @media (max-width: 600px) {
-            .counter-value { font-size: 64px; letter-spacing: -2px; }
-            .counter-card { padding: 24px; }
-            .info-row { grid-template-columns: 120px 1fr; font-size: 13px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ CHART ============ */
+        .chart-wrapper {
+            position: relative;
+            height: 210px;
+            width: 100%;
+        }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 3px;
+        }
+
+        /* ============ MOBILE ============ */
+        @media (max-width: 360px) {
+            .stat-card .value { font-size: 22px; }
+            .header h1 { font-size: 19px; }
+            .container { padding: 20px 14px 40px; }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-
-        <div class="header-row">
-            <div class="titles">
-                <h1>🖱 Click Monitor</h1>
-                <div class="subtitle">Global stats · AUS LOG 🇦🇺🌏</div>
-            </div>
-            <div class="status">
-                <span class="status-dot" id="statusDot"></span>
-                <span id="statusText">Connecting…</span>
-            </div>
+        <div class="header">
+            <div class="header-icon">📊</div>
+            <h1>myGov Monitor</h1>
+            <p>Статистика за последние 7 дней</p>
         </div>
 
-        <div class="counter-card" id="counterCard">
-            <div class="counter-label">Total clicks (all-time, all browsers)</div>
-            <div class="counter-value" id="totalValue">0</div>
-            <div class="counter-meta">
-                <span>Last update: <b id="lastUpdate">—</b></span>
-                <span>Auto refresh: <b>5s</b></span>
+        <div id="loading" class="loading">Загрузка данных...</div>
+
+        <div id="content" style="display: none;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="value" id="total-clicks">0</div>
+                    <div class="label">👆 Кликов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="total-views">0</div>
+                    <div class="label">👁 Просмотров</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="unique-users">0</div>
+                    <div class="label">👤 Уникальных</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="total-forms">0</div>
+                    <div class="label">📝 Отправок</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Динамика за неделю</h3>
+                <div class="chart-wrapper">
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Топ страниц</h3>
+                <div id="top-pages"></div>
+            </div>
+
+            <div class="card">
+                <h3>Топ кликов</h3>
+                <div id="top-clicks"></div>
+            </div>
+
+            <div class="card">
+                <h3>Топ полей ввода</h3>
+                <div id="top-inputs"></div>
             </div>
         </div>
-
-        <div class="actions">
-            <button class="primary" id="refreshBtn">🔄 Refresh now</button>
-            <button id="copyBtn">📋 Copy total</button>
-        </div>
-
-        <div class="panel">
-            <div class="panel-title">Info</div>
-            <div class="info-row">
-                <div class="k">Provider</div>
-                <div class="v"><code>api.counterapi.dev</code></div>
-
-                <div class="k">Workspace</div>
-                <div class="v"><code id="kvWorkspace">—</code></div>
-
-                <div class="k">Counter</div>
-                <div class="v"><code id="kvCounter">—</code></div>
-
-                <div class="k">Endpoint</div>
-                <div class="v"><code id="kvEndpoint">—</code></div>
-
-                <div class="k">Origin</div>
-                <div class="v" id="kvOrigin">—</div>
-
-                <div class="k">Last seen</div>
-                <div class="v" id="kvLast">—</div>
-            </div>
-        </div>
-
     </div>
 
     <script>
     (function () {
         'use strict';
 
-        /* ============================================
-           CONFIG — те же значения, что в clickmon.js
-           ============================================ */
-        const WORKSPACE = 'mygov-au';
-        const COUNTER   = 'clicks';
-        const API_GET   = `https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER}/get`;
-        const REFRESH_MS = 5000;
+        /* Если бэкенд на другом домене — впиши полный URL.
+           Если тот же Flask-сервер — оставь пусто. */
+        const API_BASE = '';
 
-        /* ============================================
-           STATE
-           ============================================ */
-        let lastTotal = -1;
-        let timer = null;
+        const COLORS = {
+            cyan: '#38bdf8',
+            blue: '#6366f1',
+            green: '#34d399',
+            grid: 'rgba(80, 180, 255, 0.07)',
+            text: '#7d9ab8'
+        };
 
-        /* ============================================
-           HELPERS
-           ============================================ */
-        function fmtTime(d) {
-            if (!d) return '—';
-            const pad = (n) => String(n).padStart(2, '0');
-            return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-        }
+        async function loadStats() {
+            try {
+                const [summaryRes, dailyRes] = await Promise.all([
+                    fetch(API_BASE + '/api/stats/summary'),
+                    fetch(API_BASE + '/api/stats/daily')
+                ]);
 
-        function setStatus(ok, text) {
-            const dot = document.getElementById('statusDot');
-            const txt = document.getElementById('statusText');
-            if (ok) {
-                dot.classList.remove('err');
-                txt.textContent = text || 'Connected';
-            } else {
-                dot.classList.add('err');
-                txt.textContent = text || 'Disconnected';
+                const summary = await summaryRes.json();
+                const daily   = await dailyRes.json();
+
+                animateNumber('total-clicks', summary.total_clicks || 0);
+                animateNumber('total-views',  summary.total_views  || 0);
+                animateNumber('unique-users', summary.unique_users || 0);
+                animateNumber('total-forms',  summary.total_forms  || 0);
+
+                renderList('top-pages',  summary.top_pages,  'page');
+                renderList('top-clicks', summary.top_clicks, 'element');
+                renderList('top-inputs', summary.top_inputs, 'element');
+
+                renderChart(daily);
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } catch (e) {
+                console.error('load error', e);
+                document.getElementById('loading').textContent = '⚠️ Ошибка загрузки данных';
             }
         }
 
-        function pulse() {
-            const card = document.getElementById('counterCard');
-            card.style.transition = 'box-shadow 0.3s ease';
-            card.style.boxShadow = '0 0 0 0 rgba(74,222,128,0.6)';
-            void card.offsetWidth;
-            card.style.boxShadow = '0 0 0 14px rgba(74,222,128,0)';
+        function animateNumber(id, target) {
+            const el = document.getElementById(id);
+            const duration = 800;
+            const start = performance.now();
+            function update(now) {
+                const p = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                const current = Math.floor(eased * target);
+                el.textContent = current.toLocaleString('ru-RU');
+                if (p < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
         }
 
-        /* ============================================
-           FETCH
-           ============================================ */
-        async function fetchTotal() {
-            try {
-                const res = await fetch(API_GET, { cache: 'no-store' });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
+        function renderList(id, items, nameKey) {
+            const c = document.getElementById(id);
+            if (!items || items.length === 0) {
+                c.innerHTML = '<div class="list-item"><span class="name">Нет данных</span></div>';
+                return;
+            }
+            c.innerHTML = items.map((it, i) => `
+                <div class="list-item">
+                    <div class="rank">${i + 1}</div>
+                    <span class="name">${escapeHtml(it[nameKey] || 'Неизвестно')}</span>
+                    <span class="count">${it.count}</span>
+                </div>
+            `).join('');
+        }
 
-                const total = (typeof data.count === 'number') ? data.count : 0;
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
 
-                document.getElementById('totalValue').textContent = total;
-                document.getElementById('lastUpdate').textContent = fmtTime(new Date());
-                document.getElementById('kvLast').textContent     = fmtTime(new Date());
+        function renderChart(daily) {
+            const ctx = document.getElementById('dailyChart').getContext('2d');
 
-                if (total !== lastTotal) {
-                    pulse();
-                    lastTotal = total;
+            const labels = daily.daily_views.map(d => {
+                const dt = new Date(d.date);
+                return dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+            });
+
+            const viewsData  = daily.daily_views.map(d => d.count);
+            const clicksData = daily.daily_clicks.map(d => d.count);
+            const formsData  = daily.daily_forms.map(d => d.count);
+
+            const gViews = ctx.createLinearGradient(0, 0, 0, 210);
+            gViews.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+            gViews.addColorStop(1, 'rgba(56, 189, 248, 0)');
+
+            const gClicks = ctx.createLinearGradient(0, 0, 0, 210);
+            gClicks.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
+            gClicks.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+            const gForms = ctx.createLinearGradient(0, 0, 0, 210);
+            gForms.addColorStop(0, 'rgba(52, 211, 153, 0.32)');
+            gForms.addColorStop(1, 'rgba(52, 211, 153, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Просмотры',
+                            data: viewsData,
+                            borderColor: COLORS.cyan,
+                            backgroundColor: gViews,
+                            fill: true, tension: 0.4, borderWidth: 2,
+                            pointBackgroundColor: COLORS.cyan,
+                            pointBorderColor: '#060a14',
+                            pointBorderWidth: 2,
+                            pointRadius: 3.5, pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Клики',
+                            data: clicksData,
+                            borderColor: COLORS.blue,
+                            backgroundColor: gClicks,
+                            fill: true, tension: 0.4, borderWidth: 2,
+                            pointBackgroundColor: COLORS.blue,
+                            pointBorderColor: '#060a14',
+                            pointBorderWidth: 2,
+                            pointRadius: 3.5, pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Отправки',
+                            data: formsData,
+                            borderColor: COLORS.green,
+                            backgroundColor: gForms,
+                            fill: true, tension: 0.4, borderWidth: 2,
+                            pointBackgroundColor: COLORS.green,
+                            pointBorderColor: '#060a14',
+                            pointBorderWidth: 2,
+                            pointRadius: 3.5, pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: COLORS.text,
+                                padding: 14,
+                                font: { size: 11.5, weight: '600' },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(6, 10, 20, 0.95)',
+                            borderColor: COLORS.cyan,
+                            borderWidth: 1,
+                            titleColor: '#fff',
+                            bodyColor: COLORS.cyan,
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: COLORS.text, font: { size: 11 }, padding: 6 },
+                            grid: { color: COLORS.grid, drawBorder: false }
+                        },
+                        x: {
+                            ticks: { color: COLORS.text, font: { size: 11 }, padding: 6 },
+                            grid: { display: false }
+                        }
+                    }
                 }
-
-                setStatus(true, 'Connected');
-                return total;
-            } catch (e) {
-                console.error('[monitor]', e);
-                setStatus(false, 'Disconnected');
-                return null;
-            }
+            });
         }
 
-        /* ============================================
-           INIT INFO
-           ============================================ */
-        function initInfo() {
-            document.getElementById('kvWorkspace').textContent = WORKSPACE;
-            document.getElementById('kvCounter').textContent   = COUNTER;
-            document.getElementById('kvEndpoint').textContent  = '/get';
-            document.getElementById('kvOrigin').textContent    = location.origin;
-        }
-
-        /* ============================================
-           BUTTONS
-           ============================================ */
-        document.getElementById('refreshBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('refreshBtn');
-            const old = btn.textContent;
-            btn.textContent = '⏳ Loading…';
-            await fetchTotal();
-            btn.textContent = '✓ Updated';
-            setTimeout(() => btn.textContent = old, 800);
-        });
-
-        document.getElementById('copyBtn').addEventListener('click', async () => {
-            const text = String(lastTotal >= 0 ? lastTotal : 0);
-            try {
-                await navigator.clipboard.writeText(text);
-                const btn = document.getElementById('copyBtn');
-                const old = btn.textContent;
-                btn.textContent = '✓ Copied: ' + text;
-                setTimeout(() => btn.textContent = old, 1200);
-            } catch (e) {
-                console.error('copy failed', e);
-            }
-        });
-
-        /* ============================================
-           LOOP
-           ============================================ */
-        function tick() { fetchTotal(); }
-
-        function start() {
-            if (timer) return;
-            tick();
-            timer = setInterval(tick, REFRESH_MS);
-        }
-
-        function stop() {
-            if (timer) { clearInterval(timer); timer = null; }
-        }
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') stop();
-            else start();
-        });
-
-        /* ============================================
-           BOOT
-           ============================================ */
-        initInfo();
-        start();
+        loadStats();
     })();
     </script>
-
 </body>
 </html>
