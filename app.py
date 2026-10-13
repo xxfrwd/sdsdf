@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify, send_from_directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH  = os.path.join(BASE_DIR, 'tracker.db')
 
-app = Flask(__name__, static_folder=BASE_DIR, static_url_path='')
+app = Flask(__name__, static_folder=None)
 
 # ---------- DB ----------
 def get_db():
@@ -56,6 +56,49 @@ def add_cors(resp):
 @app.route('/api/stats/daily', methods=['OPTIONS'])
 def options_handler():
     return ('', 204)
+
+# ============================================================
+#   STATIC FILES — index.html, monitor.html, style.css, app.js,
+#   click_tracker.js, картинки и SVG из корня проекта
+# ============================================================
+
+@app.route('/')
+def index():
+    return send_from_directory(BASE_DIR, 'index.html')
+
+@app.route('/index.html')
+def index_explicit():
+    return send_from_directory(BASE_DIR, 'index.html')
+
+@app.route('/monitor')
+def monitor():
+    return send_from_directory(BASE_DIR, 'monitor.html')
+
+@app.route('/monitor.html')
+def monitor_explicit():
+    return send_from_directory(BASE_DIR, 'monitor.html')
+
+@app.route('/<path:filename>')
+def static_files(filename):
+    """Отдаёт любой файл из корня проекта:
+    style.css, app.js, click_tracker.js, rck.svg, 1.jpg и т.д."""
+    full_path = os.path.join(BASE_DIR, filename)
+
+    # защита от выхода за пределы BASE_DIR
+    if not os.path.abspath(full_path).startswith(os.path.abspath(BASE_DIR)):
+        return jsonify(error='forbidden'), 403
+
+    # не отдаём базу данных как статику
+    if filename == 'tracker.db' or filename.endswith('.db'):
+        return jsonify(error='forbidden'), 403
+
+    if not os.path.isfile(full_path):
+        # если это не api и не файл — отдаём index.html (SPA-фоллбэк)
+        if filename.startswith('api/'):
+            return jsonify(error='not found'), 404
+        return send_from_directory(BASE_DIR, 'index.html')
+
+    return send_from_directory(BASE_DIR, filename)
 
 # ============================================================
 #   POST /api/track — приём событий
@@ -183,13 +226,6 @@ def stats_daily():
     except Exception as e:
         print('daily error:', e)
         return jsonify(error='db error'), 500
-
-# ============================================================
-#   /monitor → monitor.html
-# ============================================================
-@app.route('/monitor')
-def monitor():
-    return send_from_directory(BASE_DIR, 'monitor.html')
 
 # ---------- HEALTH ----------
 @app.route('/health')
