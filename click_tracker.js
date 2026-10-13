@@ -6,7 +6,7 @@
     'use strict';
 
     /* Бэкенд на Render */
-    const API_BASE = 'https://sdsdf-23jy.onrender.com';
+    const API_BASE = '';
     const ENDPOINT = API_BASE + '/api/track';
 
     function send(payload) {
