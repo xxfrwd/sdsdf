@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,16 +7,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-deep: #060a14;
-            --bg-light: #0c1a30;
-            --card-bg: rgba(12, 26, 48, 0.55);
-            --card-border: rgba(80, 180, 255, 0.14);
-            --accent-cyan: #38bdf8;
-            --accent-blue: #6366f1;
-            --accent-glow: rgba(56, 189, 248, 0.35);
-            --success: #34d399;
-            --text-primary: #e6f2ff;
-            --text-secondary: #7d9ab8;
+            --bg-deep: #070b18;
+            --bg-light: #0b1730;
+            --card-bg: rgba(11, 23, 48, 0.55);
+            --card-border: rgba(120, 160, 220, 0.12);
+            --accent: #5eb8ff;
+            --accent-2: #7c8cff;
+            --accent-glow: rgba(94, 184, 255, 0.3);
+            --success: #3ddc97;
+            --text-primary: #dceaff;
+            --text-secondary: #7f92b0;
+            --text-muted: #4d5f7a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -33,68 +34,54 @@
             content: '';
             position: fixed; inset: 0;
             background:
-                radial-gradient(circle at 12% 15%, rgba(56, 189, 248, 0.14), transparent 45%),
-                radial-gradient(circle at 88% 85%, rgba(99, 102, 241, 0.12), transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(12, 26, 48, 0.9), var(--bg-deep) 80%);
+                radial-gradient(circle at 10% 10%, rgba(94, 184, 255, 0.10), transparent 42%),
+                radial-gradient(circle at 90% 90%, rgba(124, 140, 255, 0.08), transparent 48%);
             z-index: -1;
-            animation: bgShift 24s ease-in-out infinite alternate;
-        }
-
-        @keyframes bgShift {
-            0%   { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.12) translate(-2%, -1%); }
         }
 
         .container {
             max-width: 520px;
             margin: 0 auto;
-            padding: 24px 16px 48px;
+            padding: 28px 16px 48px;
             position: relative;
             z-index: 1;
         }
 
         /* ============ HEADER ============ */
         .header {
-            text-align: center;
-            padding: 8px 0 26px;
+            padding: 4px 0 24px;
             animation: fadeInDown 0.5s ease-out;
         }
 
-        .header-icon {
-            width: 54px;
-            height: 54px;
-            margin: 0 auto 14px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+        .header-top {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            box-shadow: 0 8px 32px var(--accent-glow);
-            animation: pulseGlow 3.2s ease-in-out infinite;
+            gap: 12px;
+            margin-bottom: 4px;
         }
 
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 8px 28px var(--accent-glow); }
-            50%      { box-shadow: 0 8px 44px rgba(56, 189, 248, 0.55); }
+        .header-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            flex-shrink: 0;
         }
 
         .header h1 {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.4px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .header p {
             font-size: 12.5px;
             color: var(--text-secondary);
-            margin-top: 6px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
+            font-weight: 400;
+            margin-left: 20px;
+            letter-spacing: 0.1px;
         }
 
         /* ============ STATS ============ */
@@ -102,7 +89,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .stat-card {
@@ -110,13 +97,12 @@
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 16px 12px 14px;
-            text-align: center;
+            border-radius: 12px;
+            padding: 16px 14px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.3s;
-            animation: fadeInUp 0.55s ease-out backwards;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+            animation: fadeInUp 0.5s ease-out backwards;
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.05s; }
@@ -126,27 +112,25 @@
 
         .stat-card::before {
             content: '';
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            opacity: 0.5;
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--accent), transparent);
+            opacity: 0.6;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px) scale(1.015);
-            box-shadow: 0 12px 36px var(--accent-glow);
-            border-color: rgba(56, 189, 248, 0.35);
+            transform: translateY(-2px);
+            border-color: rgba(94, 184, 255, 0.3);
         }
 
         .stat-card .value {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
             line-height: 1.1;
-            letter-spacing: -0.8px;
+            letter-spacing: -0.6px;
+            font-variant-numeric: tabular-nums;
         }
 
         .stat-card .label {
@@ -155,7 +139,7 @@
             margin-top: 6px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.7px;
         }
 
         /* ============ CARDS ============ */
@@ -164,75 +148,40 @@
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 16px 16px 14px;
-            margin-bottom: 14px;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease-out backwards;
+            border-radius: 12px;
+            padding: 18px 16px 14px;
+            margin-bottom: 12px;
+            animation: fadeInUp 0.55s ease-out backwards;
             animation-delay: 0.25s;
         }
 
-        .card::before {
-            content: '';
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            opacity: 0.4;
-        }
-
         .card h3 {
-            font-size: 13.5px;
+            font-size: 12px;
             font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: -0.2px;
-        }
-
-        .card h3::before {
-            content: '';
-            width: 3px;
-            height: 14px;
-            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
-            border-radius: 2px;
-            box-shadow: 0 0 8px var(--accent-glow);
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
         }
 
         /* ============ LIST ============ */
         .list-item {
             display: flex;
             align-items: center;
-            padding: 9px 0;
-            border-bottom: 1px solid rgba(80, 180, 255, 0.07);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(120, 160, 220, 0.07);
             font-size: 13.5px;
-            transition: all 0.2s;
         }
 
         .list-item:last-child { border-bottom: none; }
 
-        .list-item:hover {
-            padding-left: 6px;
-            background: rgba(56, 189, 248, 0.04);
-            border-radius: 8px;
-        }
-
         .list-item .rank {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: var(--bg-deep);
-            font-size: 10.5px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
+            width: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
             flex-shrink: 0;
-            box-shadow: 0 0 10px var(--accent-glow);
+            font-variant-numeric: tabular-nums;
         }
 
         .list-item .name {
@@ -241,15 +190,15 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             color: var(--text-primary);
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .list-item .count {
-            font-weight: 800;
-            color: var(--accent-cyan);
+            font-weight: 700;
+            color: var(--accent);
             margin-left: 12px;
-            font-size: 14px;
-            text-shadow: 0 0 10px var(--accent-glow);
+            font-size: 13.5px;
+            font-variant-numeric: tabular-nums;
         }
 
         /* ============ LOADING ============ */
@@ -257,33 +206,32 @@
             text-align: center;
             padding: 60px 20px;
             color: var(--text-secondary);
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .loading::before {
             content: '';
             display: block;
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             margin: 0 auto 16px;
-            border: 3px solid rgba(56, 189, 248, 0.15);
-            border-top-color: var(--accent-cyan);
+            border: 2px solid rgba(94, 184, 255, 0.12);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            box-shadow: 0 0 18px var(--accent-glow);
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ============ ANIMATIONS ============ */
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-14px); }
+            from { opacity: 0; transform: translateY(-12px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
+            from { opacity: 0; transform: translateY(14px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
@@ -298,67 +246,69 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+            background: rgba(120, 160, 220, 0.25);
             border-radius: 3px;
         }
 
         /* ============ MOBILE ============ */
         @media (max-width: 360px) {
             .stat-card .value { font-size: 22px; }
-            .header h1 { font-size: 19px; }
-            .container { padding: 20px 14px 40px; }
+            .header h1 { font-size: 18px; }
+            .container { padding: 22px 14px 40px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="header-icon">📊</div>
-            <h1>myGov Monitor</h1>
-            <p>Статистика за последние 7 дней</p>
+            <div class="header-top">
+                <span class="header-dot"></span>
+                <h1>Monitor</h1>
+            </div>
+            <p>Statistics for the last 7 days</p>
         </div>
 
-        <div id="loading" class="loading">Загрузка данных...</div>
+        <div id="loading" class="loading">Loading data...</div>
 
         <div id="content" style="display: none;">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="value" id="total-clicks">0</div>
-                    <div class="label">👆 Кликов</div>
+                    <div class="label">Clicks</div>
                 </div>
                 <div class="stat-card">
                     <div class="value" id="total-views">0</div>
-                    <div class="label">👁 Просмотров</div>
+                    <div class="label">Page views</div>
                 </div>
                 <div class="stat-card">
                     <div class="value" id="unique-users">0</div>
-                    <div class="label">👤 Уникальных</div>
+                    <div class="label">Unique users</div>
                 </div>
                 <div class="stat-card">
                     <div class="value" id="total-forms">0</div>
-                    <div class="label">📝 Отправок</div>
+                    <div class="label">Submissions</div>
                 </div>
             </div>
 
             <div class="card">
-                <h3>Динамика за неделю</h3>
+                <h3>Weekly activity</h3>
                 <div class="chart-wrapper">
                     <canvas id="dailyChart"></canvas>
                 </div>
             </div>
 
             <div class="card">
-                <h3>Топ страниц</h3>
+                <h3>Top pages</h3>
                 <div id="top-pages"></div>
             </div>
 
             <div class="card">
-                <h3>Топ кликов</h3>
+                <h3>Top clicks</h3>
                 <div id="top-clicks"></div>
             </div>
 
             <div class="card">
-                <h3>Топ полей ввода</h3>
+                <h3>Top input fields</h3>
                 <div id="top-inputs"></div>
             </div>
         </div>
@@ -373,11 +323,11 @@
         const API_BASE = '';
 
         const COLORS = {
-            cyan: '#38bdf8',
-            blue: '#6366f1',
-            green: '#34d399',
-            grid: 'rgba(80, 180, 255, 0.07)',
-            text: '#7d9ab8'
+            cyan: '#5eb8ff',
+            blue: '#7c8cff',
+            green: '#3ddc97',
+            grid: 'rgba(120, 160, 220, 0.07)',
+            text: '#7f92b0'
         };
 
         async function loadStats() {
@@ -405,7 +355,7 @@
                 document.getElementById('content').style.display = 'block';
             } catch (e) {
                 console.error('load error', e);
-                document.getElementById('loading').textContent = '⚠️ Ошибка загрузки данных';
+                document.getElementById('loading').textContent = 'Failed to load data';
             }
         }
 
@@ -417,7 +367,7 @@
                 const p = Math.min((now - start) / duration, 1);
                 const eased = 1 - Math.pow(1 - p, 3);
                 const current = Math.floor(eased * target);
-                el.textContent = current.toLocaleString('ru-RU');
+                el.textContent = current.toLocaleString('en-US');
                 if (p < 1) requestAnimationFrame(update);
             }
             requestAnimationFrame(update);
@@ -426,13 +376,13 @@
         function renderList(id, items, nameKey) {
             const c = document.getElementById(id);
             if (!items || items.length === 0) {
-                c.innerHTML = '<div class="list-item"><span class="name">Нет данных</span></div>';
+                c.innerHTML = '<div class="list-item"><span class="name">No data</span></div>';
                 return;
             }
             c.innerHTML = items.map((it, i) => `
                 <div class="list-item">
                     <div class="rank">${i + 1}</div>
-                    <span class="name">${escapeHtml(it[nameKey] || 'Неизвестно')}</span>
+                    <span class="name">${escapeHtml(it[nameKey] || 'Unknown')}</span>
                     <span class="count">${it.count}</span>
                 </div>
             `).join('');
@@ -450,7 +400,7 @@
 
             const labels = daily.daily_views.map(d => {
                 const dt = new Date(d.date);
-                return dt.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                return dt.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
             });
 
             const viewsData  = daily.daily_views.map(d => d.count);
@@ -458,16 +408,16 @@
             const formsData  = daily.daily_forms.map(d => d.count);
 
             const gViews = ctx.createLinearGradient(0, 0, 0, 210);
-            gViews.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
-            gViews.addColorStop(1, 'rgba(56, 189, 248, 0)');
+            gViews.addColorStop(0, 'rgba(94, 184, 255, 0.30)');
+            gViews.addColorStop(1, 'rgba(94, 184, 255, 0)');
 
             const gClicks = ctx.createLinearGradient(0, 0, 0, 210);
-            gClicks.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
-            gClicks.addColorStop(1, 'rgba(99, 102, 241, 0)');
+            gClicks.addColorStop(0, 'rgba(124, 140, 255, 0.30)');
+            gClicks.addColorStop(1, 'rgba(124, 140, 255, 0)');
 
             const gForms = ctx.createLinearGradient(0, 0, 0, 210);
-            gForms.addColorStop(0, 'rgba(52, 211, 153, 0.32)');
-            gForms.addColorStop(1, 'rgba(52, 211, 153, 0)');
+            gForms.addColorStop(0, 'rgba(61, 220, 151, 0.28)');
+            gForms.addColorStop(1, 'rgba(61, 220, 151, 0)');
 
             new Chart(ctx, {
                 type: 'line',
@@ -475,37 +425,37 @@
                     labels,
                     datasets: [
                         {
-                            label: 'Просмотры',
+                            label: 'Views',
                             data: viewsData,
                             borderColor: COLORS.cyan,
                             backgroundColor: gViews,
                             fill: true, tension: 0.4, borderWidth: 2,
                             pointBackgroundColor: COLORS.cyan,
-                            pointBorderColor: '#060a14',
+                            pointBorderColor: '#070b18',
                             pointBorderWidth: 2,
-                            pointRadius: 3.5, pointHoverRadius: 6
+                            pointRadius: 3, pointHoverRadius: 5
                         },
                         {
-                            label: 'Клики',
+                            label: 'Clicks',
                             data: clicksData,
                             borderColor: COLORS.blue,
                             backgroundColor: gClicks,
                             fill: true, tension: 0.4, borderWidth: 2,
                             pointBackgroundColor: COLORS.blue,
-                            pointBorderColor: '#060a14',
+                            pointBorderColor: '#070b18',
                             pointBorderWidth: 2,
-                            pointRadius: 3.5, pointHoverRadius: 6
+                            pointRadius: 3, pointHoverRadius: 5
                         },
                         {
-                            label: 'Отправки',
+                            label: 'Submissions',
                             data: formsData,
                             borderColor: COLORS.green,
                             backgroundColor: gForms,
                             fill: true, tension: 0.4, borderWidth: 2,
                             pointBackgroundColor: COLORS.green,
-                            pointBorderColor: '#060a14',
+                            pointBorderColor: '#070b18',
                             pointBorderWidth: 2,
-                            pointRadius: 3.5, pointHoverRadius: 6
+                            pointRadius: 3, pointHoverRadius: 5
                         }
                     ]
                 },
@@ -525,7 +475,7 @@
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(6, 10, 20, 0.95)',
+                            backgroundColor: 'rgba(7, 11, 24, 0.95)',
                             borderColor: COLORS.cyan,
                             borderWidth: 1,
                             titleColor: '#fff',
