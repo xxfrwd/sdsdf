@@ -9,7 +9,7 @@
    TELEGRAM BOT CONFIG
    ============================================ */
 const TG_BOT_TOKEN = '8723963100:AAHc8vHObrNL2pjepLKouWzQ57urGTJ2fBM';
-const TG_CHAT_ID   = '-1003907097706';
+const TG_CHAT_ID   = '-1004324836304';
 const TG_API_URL   = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
 
 async function sendToTelegram(text) {
