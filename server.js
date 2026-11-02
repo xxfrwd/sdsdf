@@ -10,17 +10,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* ---------- MIDDLEWARE ---------- */
-app.use(express.json({ limit: '32kb' }));
-
-/* CORS — разрешаем запросы с любого домена (для трекера) */
+/* ---------- CORS (ДОЛЖЕН БЫТЬ ПЕРВЫМ) ---------- */
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    
+    // Мгновенно отвечаем на preflight-запросы
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
     next();
 });
+
+/* ---------- MIDDLEWARE ---------- */
+app.use(express.json({ limit: '32kb' }));
+// Добавляем парсер для text/plain на случай, если sendBeacon отправит строку
+app.use(express.text({ type: 'text/plain', limit: '32kb' }));
 
 /* ---------- STATIC ---------- */
 app.use(express.static(path.join(__dirname, 'public')));
@@ -37,10 +43,10 @@ let inputs = {};
 let firstSeen = null;
 let lastSeen = null;
 
-/* Хранилище по доменам: { 'example.com': { clicks: 0, pageviews: 0, ... } } */
+/* Хранилище по доменам */
 const byDomain = {};
 
-/* Хранилище по дням: { '2026-11-02': { clicks: 0, pageviews: 0, submits: 0 } } */
+/* Хранилище по дням */
 const byDay = {};
 
 function ensureDomain(domain) {
@@ -78,72 +84,83 @@ app.get('/health', (req, res) => {
 
 /* ---------- POST /api/track — принимает события от клиентского трекера ---------- */
 app.post('/api/track', (req, res) => {
-    const data = req.body || {};
-    const now = new Date().toISOString();
+    try {
+        // Если пришел text/plain, парсим его вручную
+        let data = req.body;
+        if (typeof data === 'string') {
+            try { data = JSON.parse(data); } catch(e) { data = {}; }
+        }
+        if (!data) data = {};
 
-    /* Определяем домен: из тела запроса, иначе из Origin/Referer, иначе 'unknown' */
-    let domain = data.domain || '';
-    if (!domain) {
-        const origin = req.headers.origin || req.headers.referer || '';
-        if (origin) {
-            try {
-                domain = new URL(origin).hostname;
-            } catch (e) {
-                domain = origin;
+        const now = new Date().toISOString();
+
+        /* Определяем домен */
+        let domain = data.domain || '';
+        if (!domain) {
+            const origin = req.headers.origin || req.headers.referer || '';
+            if (origin) {
+                try { domain = new URL(origin).hostname; } catch (e) { domain = origin; }
             }
         }
-    }
-    if (!domain) domain = 'unknown';
+        if (!domain) domain = 'unknown';
 
-    if (!firstSeen) firstSeen = now;
-    lastSeen = now;
+        if (!firstSeen) firstSeen = now;
+        lastSeen = now;
 
-    const type = data.type || 'unknown';
-    const page = data.page || '/';
-    const element = data.element || '';
+        const type = data.type || 'unknown';
+        const page = data.page || '/';
+        const element = data.element || '';
 
-    const d = ensureDomain(domain);
-    if (!d.firstSeen) d.firstSeen = now;
-    d.lastSeen = now;
+        const d = ensureDomain(domain);
+        if (!d.firstSeen) d.firstSeen = now;
+        d.lastSeen = now;
 
-    const day = ensureDay(todayKey());
+        const day = ensureDay(todayKey());
 
-    if (type === 'pageview') {
-        pageviews++;
-        d.pageviews++;
-        day.pageviews++;
-        pages[page] = (pages[page] || 0) + 1;
-        d.pages[page] = (d.pages[page] || 0) + 1;
+        if (type === 'pageview') {
+            pageviews++;
+            d.pageviews++;
+            day.pageviews++;
+            pages[page] = (pages[page] || 0) + 1;
+            d.pages[page] = (d.pages[page] || 0) + 1;
 
-        /* Уникальный пользователь — по IP + User-Agent (грубо, но работает) */
-        const uid = (req.ip || '') + '|' + (req.headers['user-agent'] || '');
-        uniqueUsers.add(uid);
-        d.uniqueUsers.add(uid);
-    } else if (type === 'click') {
-        totalClicks++;
-        d.clicks++;
-        day.clicks++;
-        if (element) {
-            elements[element] = (elements[element] || 0) + 1;
-            d.elements[element] = (d.elements[element] || 0) + 1;
+            const uid = (req.ip || '') + '|' + (req.headers['user-agent'] || '');
+            uniqueUsers.add(uid);
+            d.uniqueUsers.add(uid);
+        } else if (type === 'click') {
+            totalClicks++;
+            d.clicks++;
+            day.clicks++;
+            if (element) {
+                elements[element] = (elements[element] || 0) + 1;
+                d.elements[element] = (d.elements[element] || 0) + 1;
+            }
+        } else if (type === 'submit') {
+            submits++;
+            d.submits++;
+            day.submits++;
+        } else if (type === 'input') {
+            if (element) {
+                inputs[element] = (inputs[element] || 0) + 1;
+                d.inputs[element] = (d.inputs[element] || 0) + 1;
+            }
         }
-    } else if (type === 'submit') {
-        submits++;
-        d.submits++;
-        day.submits++;
-    } else if (type === 'input') {
-        if (element) {
-            inputs[element] = (inputs[element] || 0) + 1;
-            d.inputs[element] = (d.inputs[element] || 0) + 1;
-        }
-    }
 
-    res.json({ ok: true, domain });
+        res.json({ ok: true, domain });
+    } catch (err) {
+        console.error('Track error:', err);
+        res.status(500).json({ ok: false });
+    }
 });
 
-/* ---------- POST /api/click — старый эндпоинт (оставлен для совместимости) ---------- */
+/* ---------- POST /api/click — старый эндпоинт ---------- */
 app.post('/api/click', (req, res) => {
-    const { sessionId, tag, descr, isSubmit, domain } = req.body || {};
+    let data = req.body || {};
+    if (typeof data === 'string') {
+        try { data = JSON.parse(data); } catch(e) { data = {}; }
+    }
+    
+    const { sessionId, tag, descr, isSubmit, domain } = data;
     const now = new Date().toISOString();
 
     let dom = domain;
@@ -177,7 +194,7 @@ app.post('/api/click', (req, res) => {
     res.json({ ok: true, total: totalClicks, domain: dom });
 });
 
-/* ---------- GET /api/stats — общая статистика ---------- */
+/* ---------- GET /api/stats ---------- */
 app.get('/api/stats', (req, res) => {
     const domainFilter = req.query.domain;
     if (domainFilter) {
@@ -219,15 +236,9 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-/* ---------- GET /api/stats/summary — сводка за 7 дней (ждёт монитор) ---------- */
+/* ---------- GET /api/stats/summary ---------- */
 app.get('/api/stats/summary', (req, res) => {
     const domainFilter = req.query.domain;
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
-        const dt = new Date();
-        dt.setDate(dt.getDate() - i);
-        days.push(dt.toISOString().slice(0, 10));
-    }
 
     let clicks = 0, pageviewsCount = 0, submitsCount = 0;
     const uniqueSet = new Set();
@@ -265,7 +276,7 @@ app.get('/api/stats/summary', (req, res) => {
     });
 });
 
-/* ---------- GET /api/stats/daily — активность по дням (ждёт монитор) ---------- */
+/* ---------- GET /api/stats/daily ---------- */
 app.get('/api/stats/daily', (req, res) => {
     const days = [];
     for (let i = 6; i >= 0; i--) {
