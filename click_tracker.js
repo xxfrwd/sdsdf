@@ -1,5 +1,5 @@
 /* ============================================================
-   myGov — клиентский трекер (полный, с доменом)
+   myGov — клиентский трекер (обход preflight)
    ============================================================ */
 
 (function () {
@@ -9,25 +9,28 @@
     const API_BASE = 'https://sdsdf-23jy.onrender.com';
     const ENDPOINT = API_BASE + '/api/track';
 
-    /* Домен текущей страницы — отправляется с каждым событием */
+    /* Домен текущей страницы */
     function getDomain() {
         return window.location.hostname || 'unknown';
     }
 
     function send(payload) {
         try {
-            /* Всегда добавляем домен, если его нет */
             if (!payload.domain) {
                 payload.domain = getDomain();
             }
             const body = JSON.stringify(payload);
+            
+            /* 
+             * ОТПРАВЛЯЕМ КАК СТРОКУ (text/plain), А НЕ КАК BLOB/JSON.
+             * Это заставляет браузер использовать "Simple Request" и обходить preflight.
+             */
             if (navigator.sendBeacon) {
-                navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
+                navigator.sendBeacon(ENDPOINT, body); 
             } else {
                 fetch(ENDPOINT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body,
+                    body: body, // Не указываем headers Content-Type, чтобы браузер сам поставил text/plain
                     keepalive: true
                 }).catch(function () {});
             }
@@ -139,7 +142,7 @@
             referrer: document.referrer
         });
         if (navigator.sendBeacon) {
-            navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
+            navigator.sendBeacon(ENDPOINT, body); // Отправляем как строку
         }
     });
 
