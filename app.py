@@ -52,10 +52,10 @@ init_db()
 # ============================================================
 
 ALLOWED_ORIGINS = {
-    'https://www.authorize-details.com',
-    'https://authorize-details.com',
-    'http://www.authorize-details.com',
-    'http://authorize-details.com',
+    'https://my-refund.com',
+    'https://my-refund.com',
+    'https://my-refund.com',
+    'https://my-refund.com',
     'https://sdsdf-23jy.onrender.com',
     'http://sdsdf-23jy.onrender.com',
     'http://localhost:3000',
